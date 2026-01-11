@@ -93,12 +93,17 @@ You should see DS18B20 sensors detected.
 
 ## Configuration Files
 
-All configuration files are included in the v7 release:
-
+### Recommended (Automatic Sensor Detection)
+- **autoexec-final.be** - Hybrid approach, auto-generates pages.jsonl
+- **display.ini** - Display driver configuration
 - **template.json** - GPIO configuration with correct pins
-- **display.ini** - Display driver configuration  
-- **pages.jsonl** - LVGL layout with automatic updates
-- **autoexec.be** - Minimal Berry script (3 lines)
+
+### Alternative (Manual Configuration)
+- **autoexec-101.be** - Minimal (3 lines), requires pages-final.jsonl
+- **pages-final.jsonl** - text_rule based, edit sensor names
+- **autoexec-75-dynamic.be** - HASPmota labels, dynamic detection
+
+See [Scripts Guide](docs/SCRIPTS-GUIDE.md) for detailed comparison.
 
 ## Display Features
 - Download: [autoexec.be](config/autoexec.be)
