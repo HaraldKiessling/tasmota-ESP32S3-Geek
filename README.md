@@ -17,10 +17,14 @@ Dieses Projekt stellt eine angepasste Tasmota Firmware für den Waveshare ESP32S
 
 ✅ Tasmota 15.0.1 (kompatibel mit ESP32S3-Geek)  
 ✅ Multi-Sensor Support (DS18B20 + BME280)  
+✅ **LVGL Graphics Library** (v3)  
+✅ Universal Display Driver  
+✅ Enhanced WiFi Scan GUI  
 ✅ Automatische Display-Anzeige (IP, SSID, Zeit, Sensoren)  
-✅ MQTT Integration  
+✅ MQTT Integration mit konfigurierbarem TelePeriod  
 ✅ OTA Updates  
-✅ Berry Scripting  
+✅ Berry Scripting + UFileSys  
+✅ Autoconf GPIO  
 ✅ Custom Branding (esp32s3geek / by Harald)  
 ✅ Vollständige Dokumentation  
 ✅ Automatisierte Tests  
@@ -38,15 +42,19 @@ Dieses Projekt stellt eine angepasste Tasmota Firmware für den Waveshare ESP32S
 
 ### 1. Firmware Download
 
-**Neuinstallation**:
+**Empfohlen: v3 LVGL (neueste Version)**:
 ```bash
+# Neuinstallation (Factory)
 wget https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/firmware/release/tasmota32s3geek-v15.0.1-factory.bin
+
+# OTA Update
+wget https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/firmware/release/tasmota32s3geek-v15.0.1-v3-lvgl.bin
 ```
 
-**Update**:
-```bash
-wget https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/firmware/release/tasmota32s3geek-v15.0.1.bin
-```
+**Alternative Versionen**:
+- `tasmota32s3geek-v15.0.1.bin` - v1 Basis (2.0 MB)
+- `tasmota32s3geek-v15.0.1-v2.bin` - v2 mit Compile Zeit (2.0 MB)
+- `tasmota32s3geek-v15.0.1-v3-lvgl.bin` - v3 mit LVGL (2.7 MB) ✅ Empfohlen
 
 ### 2. Installation
 

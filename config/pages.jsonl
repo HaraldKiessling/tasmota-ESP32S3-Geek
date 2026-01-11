@@ -1,0 +1,7 @@
+{"page":0,"comment":"Main page with WiFi and Sensors"}
+{"x":0,"y":0,"t":"ESP32S3-Geek","f":1}
+{"x":0,"y":15,"t":"SSID: %ssid%","f":1}
+{"x":0,"y":30,"t":"IP: %ip%","f":1}
+{"x":0,"y":45,"t":"%time%","f":1}
+{"x":0,"y":65,"t":"DS1: %ds1_temp%C","f":1}
+{"x":0,"y":80,"t":"DS2: %ds2_temp%C","f":1}
