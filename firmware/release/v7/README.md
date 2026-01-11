@@ -43,8 +43,9 @@
 ### Configuration Files
 - `template.json` - GPIO configuration with correct pins
 - `display.ini` - Display driver configuration
-- `pages.jsonl` - LVGL layout with text_rule updates
+- `pages.jsonl` - LVGL layout with text_rule updates (static sensor names)
 - `autoexec.be` - Minimal Berry startup script (3 lines)
+- `autoexec-dynamic.be` - **NEW**: Dynamic sensor detection (recommended)
 
 ## Quick Start
 
@@ -61,9 +62,19 @@ Connect to AP "tasmota-XXXXXX" and configure WiFi via web interface.
 
 ### 3. Upload Configuration Files
 
+**Option A: Dynamic Sensor Detection (Recommended)**
+
 Via web interface (Tools → Manage File system):
 1. Upload `display.ini`
-2. Upload `pages.jsonl`
+2. Upload `autoexec-dynamic.be` and rename to `autoexec.be`
+
+This will automatically detect all DS18B20 sensors and generate `pages.jsonl`.
+
+**Option B: Static Configuration**
+
+Via web interface (Tools → Manage File system):
+1. Upload `display.ini`
+2. Upload `pages.jsonl` (edit sensor names first!)
 3. Upload `autoexec.be`
 
 ### 4. Apply GPIO Template
@@ -127,14 +138,22 @@ You should see DS18B20 sensors detected.
 - **Auto-update**: Berry cron every 2 seconds
 - **text_rule**: Automatic sensor value updates
 
-### autoexec.be
+### autoexec.be Options
+
+**Option 1: Dynamic (autoexec-dynamic.be) - Recommended**
+- Automatically detects all DS18B20 sensors at boot
+- Generates `pages.jsonl` with correct sensor names
+- No manual configuration needed
+- Works with any sensor IDs
+- Supports up to 10 sensors
+
+**Option 2: Static (autoexec.be) - Simple**
 ```berry
 # simple `autoexec.be` to run HASPmota using the default `pages.jsonl`
 import haspmota
 haspmota.start()
 ```
-
-Only 3 lines! pages.jsonl does all the work.
+Only 3 lines! Requires pre-configured `pages.jsonl` with correct sensor names.
 
 ## Tested Configuration
 
