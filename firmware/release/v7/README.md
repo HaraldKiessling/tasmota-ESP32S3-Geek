@@ -43,9 +43,8 @@
 ### Configuration Files
 - `template.json` - GPIO configuration with correct pins
 - `display.ini` - Display driver configuration
-- `pages.jsonl` - LVGL layout with text_rule updates (static sensor names)
-- `autoexec.be` - Minimal Berry startup script (3 lines)
-- `autoexec-dynamic.be` - **NEW**: Dynamic sensor detection (recommended)
+- `autoexec.be` - **Hybrid approach (RECOMMENDED)**: Auto-detects sensors, generates pages.jsonl
+- `autoexec-dynamic.be` - Alternative: Same as autoexec.be (for compatibility)
 
 ## Quick Start
 
@@ -62,20 +61,19 @@ Connect to AP "tasmota-XXXXXX" and configure WiFi via web interface.
 
 ### 3. Upload Configuration Files
 
-**Option A: Dynamic Sensor Detection (Recommended)**
+**Recommended: Hybrid Approach (Automatic)**
 
 Via web interface (Tools → Manage File system):
 1. Upload `display.ini`
-2. Upload `autoexec-dynamic.be` and rename to `autoexec.be`
+2. Upload `autoexec.be`
 
-This will automatically detect all DS18B20 sensors and generate `pages.jsonl`.
+That's it! The script will:
+- Automatically detect all DS18B20 sensors
+- Generate `pages.jsonl` with correct sensor names
+- Sort sensors alphabetically
+- Configure text_rule for automatic updates
 
-**Option B: Static Configuration**
-
-Via web interface (Tools → Manage File system):
-1. Upload `display.ini`
-2. Upload `pages.jsonl` (edit sensor names first!)
-3. Upload `autoexec.be`
+**Tested and working on tasmota-101 with 5 DS18B20 sensors!**
 
 ### 4. Apply GPIO Template
 
@@ -138,22 +136,29 @@ You should see DS18B20 sensors detected.
 - **Auto-update**: Berry cron every 2 seconds
 - **text_rule**: Automatic sensor value updates
 
-### autoexec.be Options
+### autoexec.be - Hybrid Approach
 
-**Option 1: Dynamic (autoexec-dynamic.be) - Recommended**
+**Default configuration (autoexec.be)**:
 - Automatically detects all DS18B20 sensors at boot
-- Generates `pages.jsonl` with correct sensor names
+- Generates `pages.jsonl` dynamically with correct sensor names
+- Sorts sensors alphabetically for consistent display
+- Uses text_rule for automatic updates every 2 seconds
 - No manual configuration needed
 - Works with any sensor IDs
-- Supports up to 10 sensors
+- Supports up to 10 DS18B20 sensors
+- Supports up to 2 BME280 sensors
 
-**Option 2: Static (autoexec.be) - Simple**
-```berry
-# simple `autoexec.be` to run HASPmota using the default `pages.jsonl`
-import haspmota
-haspmota.start()
-```
-Only 3 lines! Requires pre-configured `pages.jsonl` with correct sensor names.
+**How it works**:
+1. Waits 2 seconds for sensors to initialize
+2. Reads all sensors via `tasmota.read_sensors()`
+3. Detects DS18B20/BME280 sensors dynamically
+4. Sorts sensors alphabetically
+5. Generates pages.jsonl with text_rule configuration
+6. Starts HASPmota
+
+**Tested on**:
+- ✅ tasmota-101 (tasmota32): 5 DS18B20 sensors - WORKING
+- ✅ tasmota-77 (esp32s3geek): 2 DS18B20 sensors - WORKING
 
 ## Tested Configuration
 
