@@ -1,0 +1,14 @@
+{"page":0,"comment":"---------- Upper stat line ----------"}
+
+{"id":11,"obj":"label","x":0,"y":0,"w":240,"pad_right":90,"h":22,"bg_color":"#D00000","bg_opa":255,"radius":0,"border_side":0,"text":"Temperatur","text_font":"montserrat-20"}
+
+{"id":15,"obj":"lv_wifi_arcs","x":211,"y":0,"w":29,"h":22,"radius":0,"border_side":0,"bg_color":"#000000","line_color":"#FFFFFF"}
+{"id":16,"obj":"lv_clock","x":132,"y":3,"w":55,"h":16,"radius":0,"border_side":0}
+
+{"page":1,"comment":"---------- Page 1 ----------"}
+{"id":0,"bg_color":"#0000A0","bg_grad_color":"#000000","bg_grad_dir":1,"text_color":"#FFFFFF"}
+
+{"id":11,"obj":"label","x":2,"y":25 ,"w":220,"text":"DS-5329E2=","align":0,"text_rule":"DS18B20-5329E2#Temperature","text_rule_format":"5329E2:%4.2f C","text_rule_formula":"val","text_font":"montserrat-20"}
+{"id":12,"obj":"label","x":2,"y":50 ,"w":220,"text":"DS-51C76D=","align":0,"text_rule":"DS18B20-51C76D#Temperature","text_rule_format":"51C76D:%4.2f C","text_rule_formula":"val","text_font":"montserrat-20"}
+
+{"comment":"--- Trigger sensors every 2 seconds ---","berry_run":"tasmota.add_cron('*/2 * * * * *', def () var s = tasmota.read_sensors() if (s) tasmota.publish_rule(s) end end, 'hm_every_2_s')"}
