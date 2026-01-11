@@ -8,6 +8,7 @@ Tasmota/
 # Firmware binaries (except release)
 *.bin
 !firmware/release/*.bin
+!firmware/release/**/*.bin
 
 # Python
 __pycache__/

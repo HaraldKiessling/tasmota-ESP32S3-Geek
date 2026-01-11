@@ -1,92 +1,106 @@
 # Tasmota ESP32S3-Geek
 
-Custom Tasmota 15.0.1 Firmware für Waveshare ESP32S3-Geek Stick mit Multi-Sensor Support
+**Custom Tasmota firmware for Waveshare ESP32S3-Geek stick**
 
-## Übersicht
+![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)
+![Version](https://img.shields.io/badge/Version-v7-blue)
+![Tasmota](https://img.shields.io/badge/Tasmota-15.0.1-orange)
 
-Dieses Projekt stellt eine angepasste Tasmota Firmware für den Waveshare ESP32S3-Geek Stick bereit mit Unterstützung für:
+## 🎯 Latest Release: v7 (2026-01-11)
 
-- **DS18B20 Temperatursensoren**: Bis zu 10 Sensoren pro GPIO (3 GPIO verfügbar)
-- **BME280 Sensoren**: 2 Geräte über I2C (Temperatur, Luftfeuchtigkeit, Luftdruck)
-- **ST7789 TFT Display**: 240x135 Pixel mit automatischer Anzeige
-- **MQTT**: Vollständige Integration
-- **Berry Scripting**: Automatische Display-Updates
-- **Web Interface**: Konfiguration und Monitoring
+**✅ FULLY WORKING CONFIGURATION**
+- Correct GPIO pins identified and tested
+- DS18B20 sensors working on GPIO 6, 13, 14
+- I2C working on GPIO 16 (SDA), 17 (SCL)
+- Display with HASPmota fully functional
+- Automatic sensor updates every 2 seconds
+
+[📥 Download v7 Release](firmware/release/v7/)
 
 ## Features
 
-✅ Tasmota 15.0.1 (kompatibel mit ESP32S3-Geek)  
-✅ Multi-Sensor Support (DS18B20 + BME280)  
-✅ **LVGL Graphics Library** (v3)  
-✅ Universal Display Driver  
-✅ Enhanced WiFi Scan GUI  
-✅ Automatische Display-Anzeige (IP, SSID, Zeit, Sensoren)  
-✅ MQTT Integration mit konfigurierbarem TelePeriod  
-✅ OTA Updates  
-✅ Berry Scripting + UFileSys  
-✅ Autoconf GPIO  
-✅ Custom Branding (esp32s3geek / by Harald)  
-✅ Vollständige Dokumentation  
-✅ Automatisierte Tests  
+✅ **DS18B20 Temperature Sensors** (GPIO 6, 13, 14)  
+✅ **I2C Support** (GPIO 16 SDA, 17 SCL) for BME280, etc.  
+✅ **ST7789 TFT Display** (240x135) with HASPmota  
+✅ **Automatic Display Updates** every 2 seconds  
+✅ **MQTT Integration** with configurable telemetry  
+✅ **OTA Updates** with preserved WiFi settings  
+✅ **Berry Scripting** with minimal configuration  
+✅ **Universal Display Driver** with display.ini  
+✅ **text_rule** based sensor updates (no manual coding)  
+✅ **Complete Documentation** and tested configuration  
 
-## Hardware
+## Hardware Specification
 
-- **Board**: Waveshare ESP32S3-Geek Stick
-- **MCU**: ESP32-S3 @ 240MHz
-- **Flash**: 16MB
-- **PSRAM**: 8MB
+### ESP32S3-Geek Pinout
+- **DS18B20**: GPIO 6, 13, or 14
+- **I2C SDA**: GPIO 16
+- **I2C SCL**: GPIO 17
+- **UART TX**: GPIO 43
+- **UART RX**: GPIO 44
+- **Display**: ST7789 (via display.ini)
+
+### Tested Configuration
+- **Board**: Waveshare ESP32S3-Geek
+- **Sensors**: 2x DS18B20 on GPIO 13
 - **Display**: ST7789 240x135 TFT
-- **Sensoren**: DS18B20 (GPIO 32, 33), BME280 (I2C 0x76, 0x77)
+- **Status**: ✅ All features working
 
-## Schnellstart
+## Quick Start
 
-### 1. Firmware Download
+### 2. Flash Firmware
 
-**Empfohlen: v3 LVGL (neueste Version)**:
-```bash
-# Neuinstallation (Factory)
-wget https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/firmware/release/tasmota32s3geek-v15.0.1-factory.bin
-
-# OTA Update
-wget https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/firmware/release/tasmota32s3geek-v15.0.1-v3-lvgl.bin
-```
-
-**Alternative Versionen**:
-- `tasmota32s3geek-v15.0.1.bin` - v1 Basis (2.0 MB)
-- `tasmota32s3geek-v15.0.1-v2.bin` - v2 mit Compile Zeit (2.0 MB)
-- `tasmota32s3geek-v15.0.1-v3-lvgl.bin` - v3 mit LVGL (2.7 MB) ✅ Empfohlen
-
-### 2. Installation
-
-**Automatisch** (empfohlen):
-```bash
-git clone https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek.git
-cd tasmota-ESP32S3-Geek
-./scripts/flash.sh
-```
-
-**Manuell**:
 ```bash
 pip3 install esptool
-esptool.py --chip esp32s3 --port /dev/ttyUSB0 --baud 460800 \
-  --before default_reset --after hard_reset write_flash \
-  -z --flash_mode dio --flash_freq 80m --flash_size detect \
-  0x0 tasmota32s3geek-v15.0.1-factory.bin
+
+# Factory install (first time)
+esptool.py --chip esp32s3 --port /dev/ttyUSB0 --baud 921600 \
+  write_flash -z 0x0 firmware/release/v7/tasmota32s3geek-v15.0.1-v7-factory.bin
 ```
 
-### 3. Konfiguration
+### 3. Configure WiFi
 
-**WiFi** (nach erstem Start):
-- Verbinde mit AP: `tasmota-XXXXXX`
-- Öffne: http://192.168.4.1
-- WiFi Daten eingeben
+1. Connect to AP: `tasmota-XXXXXX`
+2. Open: http://192.168.4.1
+3. Enter WiFi credentials
 
-**Template** (in Tasmota Console):
+### 4. Upload Configuration Files
+
+Via web interface (Tools → Manage File system):
+1. Upload `display.ini`
+2. Upload `pages.jsonl`
+3. Upload `autoexec.be`
+
+All files are in `firmware/release/v7/` folder.
+
+### 5. Apply GPIO Template
+
+Via Console:
 ```
-Backlog Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}; Module 0; DeviceName ESP32S3-Geek; DisplayMode 0; DisplayRotate 1; TelePeriod 60; SaveData 1; Restart 1
+Template {"NAME":"ESP32S3-Geek","GPIO":[32,1,1,0,4864,1,1312,1,1,1,1,1,1,1312,1312,1,640,608,1,1,1,3840,6210,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,1,1,1,3200,3232],"FLAG":0,"BASE":1}
+Module 0
+Restart 1
 ```
 
-**Display Automation**:
+### 6. Verify
+
+After restart (~30 seconds):
+```bash
+curl -s "http://tasmota-77.local/cm?cmnd=Status%2010" | jq .
+```
+
+You should see DS18B20 sensors detected.
+
+## Configuration Files
+
+All configuration files are included in the v7 release:
+
+- **template.json** - GPIO configuration with correct pins
+- **display.ini** - Display driver configuration  
+- **pages.jsonl** - LVGL layout with automatic updates
+- **autoexec.be** - Minimal Berry script (3 lines)
+
+## Display Features
 - Download: [autoexec.be](config/autoexec.be)
 - Upload über Tasmota Web Interface → Manage File System
 - Restart
