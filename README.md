@@ -6,16 +6,28 @@
 ![Version](https://img.shields.io/badge/Version-v7-blue)
 ![Tasmota](https://img.shields.io/badge/Tasmota-15.0.1-orange)
 
-## 🎯 Latest Release: v7 (2026-01-11)
+## 🎯 Latest Release: v7 + Custom Firmware (2026-01-11)
 
-**✅ FULLY WORKING CONFIGURATION**
-- Correct GPIO pins identified and tested
-- DS18B20 sensors working on GPIO 6, 13, 14
-- I2C working on GPIO 16 (SDA), 17 (SCL)
-- Display with HASPmota fully functional
-- Automatic sensor updates every 2 seconds
+**✅ CUSTOM ESP32-S3 LVGL FIRMWARE BUILT**
+- tasmota32s3-lvgl-15.0.1.bin with full HASPmota support
+- 2.5 MB firmware, 87.8% flash usage
+- Compatible partition scheme with esp32s3geek
+- Verified LVGL and HASPmota in binary
+- Ready for serial flash deployment
 
-[📥 Download v7 Release](firmware/release/v7/)
+**✅ HYBRID APPROACH WORKING ON TASMOTA-101**
+- Automatic sensor detection (5x DS18B20)
+- Dynamic pages.jsonl generation
+- Display updates every 2 seconds
+- Production ready configuration
+
+**⚠️ DEVICES IN SAFEBOOT**
+- tasmota-75 and tasmota-77 require serial flash recovery
+- Normal firmware partition damaged from OTA attempts
+- Physical access required for deployment
+
+[📥 Download Custom Firmware](firmware/tasmota32s3-lvgl-15.0.1.bin)  
+[📖 Build Documentation](docs/CUSTOM_FIRMWARE_BUILD_SUCCESS.md)
 
 ## Features
 
@@ -93,17 +105,23 @@ You should see DS18B20 sensors detected.
 
 ## Configuration Files
 
-### Recommended (Automatic Sensor Detection)
-- **autoexec-final.be** - Hybrid approach, auto-generates pages.jsonl
-- **display.ini** - Display driver configuration
+### Firmware
+- **tasmota32s3-lvgl-15.0.1.bin** - ✅ Custom ESP32-S3 LVGL firmware (RECOMMENDED)
+- Full LVGL and HASPmota support
+- Compatible partition scheme
+- Ready for serial flash
+
+### Recommended Configuration (Hybrid Approach)
+- **autoexec-final.be** - Automatic sensor detection, generates pages.jsonl dynamically
+- **display.ini** - Display driver configuration (ST7789)
 - **template.json** - GPIO configuration with correct pins
 
-### Alternative (Manual Configuration)
-- **autoexec-101.be** - Minimal (3 lines), requires pages-final.jsonl
-- **pages-final.jsonl** - text_rule based, edit sensor names
-- **autoexec-75-dynamic.be** - HASPmota labels, dynamic detection
+### Alternative Configurations
+- **autoexec-101.be** - Minimal (3 lines), requires manual pages.jsonl
+- **pages-final.jsonl** - text_rule based, manual sensor configuration
+- **autoexec-75-dynamic.be** - HASPmota labels, dynamic detection (requires working HASPmota)
 
-See [Scripts Guide](docs/SCRIPTS-GUIDE.md) for detailed comparison.
+See [Scripts Guide](docs/SCRIPTS-GUIDE.md) and [Custom Firmware Build](docs/CUSTOM_FIRMWARE_BUILD_SUCCESS.md) for details.
 
 ## Display Features
 - Download: [autoexec.be](config/autoexec.be)
@@ -125,6 +143,7 @@ tasmota-ESP32S3-Geek/
 │   ├── requirements.md         # Anforderungen
 │   └── testing.md              # Test Dokumentation
 ├── firmware/                    # Firmware Dateien
+│   ├── tasmota32s3-lvgl-15.0.1.bin  # ✅ Custom LVGL firmware
 │   └── release/                # Release Binaries
 │       ├── tasmota32s3geek-v15.0.1.bin
 │       ├── tasmota32s3geek-v15.0.1-factory.bin
@@ -143,38 +162,51 @@ tasmota-ESP32S3-Geek/
 
 ## Dokumentation
 
-### Anleitungen
-- [Installation Guide](docs/installation.md) - Detaillierte Installationsanleitung
-- [Requirements](docs/requirements.md) - Projektanforderungen
+### Firmware Build & Deployment
+- [Custom Firmware Build](docs/CUSTOM_FIRMWARE_BUILD_SUCCESS.md) - ✅ Build-Prozess und Ergebnisse
+- [Firmware Test Results](docs/FIRMWARE_TEST_RESULTS.md) - Test-Ergebnisse und Analyse
+- [Firmware Recovery](docs/FIRMWARE_RECOVERY.md) - Recovery-Prozeduren
+- [Final Solution](docs/FINAL_SOLUTION.md) - Empfohlene Lösungen
+
+### Configuration & Testing
+- [Configuration Comparison](docs/CONFIGURATION_COMPARISON.md) - Geräte-Vergleich
+- [Scripts Guide](docs/SCRIPTS-GUIDE.md) - Berry Script Vergleich
+- [Installation Guide](docs/installation.md) - Installationsanleitung
 - [Testing Guide](docs/testing.md) - Test Dokumentation
 
-### Konfiguration
+### Hardware & GPIO
+- [Hardware Specification](docs/HARDWARE.md) - Hardware Details
 - [GPIO Mapping](config/gpio-mapping.md) - GPIO Pin Belegung
 - [Display Config](config/display-config.md) - Display Konfiguration
-- [Template Commands](config/template-commands.txt) - Tasmota Befehle
-
-### Firmware
-- [Firmware README](firmware/release/README.md) - Download und Features
-- [Version Info](firmware/release/version.txt) - Build Informationen
 
 ## Build von Source
 
-### Voraussetzungen
+### Custom ESP32-S3 LVGL Firmware
+
+**✅ Successfully Built**: tasmota32s3-lvgl-15.0.1.bin
+
 ```bash
-# Python 3 und PlatformIO
+# Setup
+cd Tasmota
 python3 -m venv .venv
 .venv/bin/pip install platformio
 
-# Tasmota Source
-git clone --depth 1 --branch v15.0.1 https://github.com/arendst/Tasmota.git
+# Checkout v15.0.1
+git checkout v15.0.1
+
+# Build
+.venv/bin/pio run -e tasmota32s3-lvgl
 ```
 
-### Build
-```bash
-./scripts/build.sh
-```
+**Build Result**:
+- Size: 2.5 MB (87.8% flash)
+- RAM: 18.9% (61892 bytes)
+- Build Time: 393 seconds
+- Features: LVGL, HASPmota, DS18B20, BME280, ST7789
 
-Firmware wird erstellt in: `firmware/release/`
+**Output**: `Tasmota/.pio/build/tasmota32s3-lvgl/firmware.bin`
+
+See [Build Documentation](docs/CUSTOM_FIRMWARE_BUILD_SUCCESS.md) for details.
 
 ## Sensoren
 

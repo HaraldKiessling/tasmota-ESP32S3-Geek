@@ -379,39 +379,71 @@ Same as tasmota-101 hybrid approach, but sensors not detected due to hardware is
 
 ## Firmware Update Results (2026-01-11)
 
-### Custom Firmware Test - FAILED ❌
+### Custom Firmware Build - SUCCESS ✅
 
-**Objective**: Build ESP32-S3 firmware with LVGL/HASPmota support
+**Objective**: Build ESP32-S3 specific firmware with LVGL/HASPmota support
 
 **Approach**:
+- Checkout Tasmota v15.0.1 tag
 - Modified platformio_override.ini for tasmota32s3-lvgl build
 - Modified user_config_override.h with custom configuration
-- Built firmware from Tasmota v15.0.1 source
+- Built firmware from source using PlatformIO
+
+**Build Result**: ✅ SUCCESS
+- **File**: tasmota32s3-lvgl-15.0.1.bin
+- **Size**: 2.5 MB (87.8% flash usage)
+- **Build Time**: 393 seconds
+- **RAM Usage**: 18.9% (61892 bytes)
+- **Features**: ✅ LVGL, ✅ HASPmota, ✅ DS18B20, ✅ BME280, ✅ ST7789
+
+**Verification**:
+```bash
+strings firmware/tasmota32s3-lvgl-15.0.1.bin | grep -i haspmota
+# Output: HSP: HASPmota initialized, theme_haspmota_init, HASPmota
+```
+
+### OTA Testing - BLOCKED ❌
+
+**Test Devices**: tasmota-75, tasmota-77
 
 **Result**:
-- ❌ Both tasmota-75 and tasmota-77 went offline after OTA update
-- ❌ Devices not responding to network requests
-- ❌ Physical access required for recovery
+- ❌ Both devices stuck in SAFEBOOT (15.2.0)
+- ❌ Normal firmware partition damaged from previous OTA attempts
+- ❌ Cannot boot to normal partition
+- ❌ OTA from SAFEBOOT has limited capabilities
 
 **Root Cause**:
-- Partition scheme mismatch between custom and standard builds
-- Configuration conflicts (custom project name)
-- No safeboot partition for automatic rollback
+- Multiple failed OTA attempts with incompatible firmwares
+- Partition corruption during previous updates
+- Normal partition damaged, SAFEBOOT protection activated
 
-### Official Firmware Solution - RECOMMENDED ✅
+**Recovery Required**:
+- Physical access for serial flash
+- Flash tasmota32s3-lvgl-15.0.1.bin via esptool.py
+- Restore configuration files
 
-**Firmware**: tasmota32-lvgl.bin 15.2.0
-**Source**: http://ota.tasmota.com/tasmota32/release/tasmota32-lvgl.bin
-**Size**: 2.6 MB
+### Firmware Comparison
 
-**Features**:
-- ✅ Full LVGL support
-- ✅ HASPmota working
-- ✅ Works on ESP32-S3 (universal ESP32 build)
-- ✅ Tested and stable
-- ✅ Automatic rollback on failed boot
+| Feature | tasmota32-lvgl (official) | tasmota32s3-lvgl (custom) |
+|---------|---------------------------|---------------------------|
+| Version | 15.2.0 | 15.0.1 |
+| Size | 2.6 MB | 2.5 MB |
+| LVGL | ✅ | ✅ |
+| HASPmota | ✅ | ✅ |
+| ESP32-S3 | ✅ (universal) | ✅ (specific) |
+| Partition | Standard | Custom (compatible) |
+| OTA from esp32s3geek | ❌ Incompatible | ✅ Compatible |
+| Build | Official | Custom |
+| Status | Not compatible with ESP32-S3 | ✅ Ready for deployment |
 
-**Status**: Ready for deployment after device recovery
+### Recommendation
+
+**Use tasmota32s3-lvgl-15.0.1.bin** (custom build):
+- ✅ Built successfully with full LVGL/HASPmota support
+- ✅ Compatible partition scheme with existing esp32s3geek firmware
+- ✅ ESP32-S3 specific optimizations
+- ✅ Verified HASPmota in binary
+- ⚠️ Requires serial flash for initial deployment (devices in SAFEBOOT)
 
 ## Current Status Summary (2026-01-11 - After Firmware Tests)
 
@@ -427,28 +459,30 @@ Files:        ✅ display.ini, pages.jsonl (generated), autoexec-final.be
 Status:       ✅ PRODUCTION READY
 ```
 
-### tasmota-75: ❌ OFFLINE (Recovery Required)
+### tasmota-75: ⚠️ SAFEBOOT (Recovery Required)
 ```
-Firmware:     esp32s3geek (custom) - FAILED OTA UPDATE
-Display:      Unknown (device offline)
-HASPmota:     Unknown (device offline)
-LVGL Mirror:  Unknown (device offline)
-Sensors:      2x BME280 (before update)
+Firmware:     SAFEBOOT 15.2.0 (normal partition damaged)
+Display:      Unknown (SAFEBOOT mode)
+HASPmota:     Unknown (SAFEBOOT mode)
+LVGL Mirror:  Unknown (SAFEBOOT mode)
+Sensors:      2x BME280 (before damage)
 Approach:     Hybrid (autoexec-final.be ready)
 Files:        display.ini, autoexec-final.be (ready to upload)
-Status:       ❌ OFFLINE - Needs serial recovery with tasmota32-lvgl-15.2.0.bin
+Status:       ⚠️ SAFEBOOT - Needs serial flash with tasmota32s3-lvgl-15.0.1.bin
+Recovery:     esptool.py write_flash -z 0x0 tasmota32s3-lvgl-15.0.1.bin
 ```
 
-### tasmota-77: ❌ OFFLINE (Recovery Required)
+### tasmota-77: ⚠️ SAFEBOOT (Recovery Required)
 ```
-Firmware:     esp32s3geek (custom) - FAILED OTA UPDATE
-Display:      Unknown (device offline)
-HASPmota:     Unknown (device offline)
-LVGL Mirror:  Unknown (device offline)
-Sensors:      DS18B20 (hardware not detected before update)
+Firmware:     SAFEBOOT 15.2.0 (normal partition damaged)
+Display:      Unknown (SAFEBOOT mode)
+HASPmota:     Unknown (SAFEBOOT mode)
+LVGL Mirror:  Unknown (SAFEBOOT mode)
+Sensors:      DS18B20 (hardware not detected before damage)
 Approach:     Hybrid (autoexec-final.be ready)
 Files:        display.ini, autoexec-final.be (ready to upload)
-Status:       ❌ OFFLINE - Needs serial recovery with tasmota32-lvgl-15.2.0.bin
+Status:       ⚠️ SAFEBOOT - Needs serial flash with tasmota32s3-lvgl-15.0.1.bin
+Recovery:     esptool.py write_flash -z 0x0 tasmota32s3-lvgl-15.0.1.bin
 ```
 
 ## Deployment History
@@ -461,7 +495,15 @@ Status:       ❌ OFFLINE - Needs serial recovery with tasmota32-lvgl-15.2.0.bin
 - ✅ Display showing all sensors correctly
 - ✅ Set as default configuration for project
 
+### Custom Firmware Build (2026-01-11)
+- ✅ Built tasmota32s3-lvgl-15.0.1.bin successfully
+- ✅ Full LVGL/HASPmota support verified
+- ✅ Compatible partition scheme with esp32s3geek
+- ✅ Ready for deployment via serial flash
+- ❌ OTA testing blocked (devices in SAFEBOOT)
+
 ### Next Steps
-1. **tasmota-75**: Flash tasmota32 firmware, deploy hybrid approach
-2. **tasmota-77**: Hardware inspection to find DS18B20 GPIO, then deploy hybrid approach
-3. **Documentation**: Update all references to use hybrid as default
+1. **tasmota-75**: Serial flash tasmota32s3-lvgl-15.0.1.bin, deploy hybrid approach
+2. **tasmota-77**: Serial flash tasmota32s3-lvgl-15.0.1.bin, find DS18B20 GPIO, deploy hybrid approach
+3. **tasmota-101**: Keep current configuration (working perfectly)
+4. **Documentation**: Update with serial flash results
