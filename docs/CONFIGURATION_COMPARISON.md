@@ -1,14 +1,40 @@
 # Configuration Comparison: tasmota-101 vs tasmota-75 vs tasmota-77
 
+**Last Updated**: 2026-01-11 (after hybrid deployment)
+
+## Quick Reference
+
+**Production Device**: tasmota-101 (tasmota32 firmware + hybrid approach)
+
+**Key Learnings**:
+1. ✅ **tasmota32 firmware** has full HASPmota support (use for production)
+2. ⚠️ **esp32s3geek firmware** has incomplete HASPmota support (labels not created)
+3. ✅ **Hybrid approach** (autoexec-final.be) provides automatic sensor detection
+4. ✅ **text_rule** in pages.jsonl enables automatic display updates
+5. ❌ Manual Berry updates (263 lines) don't work without HASPmota labels
+
+**Recommendations**:
+- Use **tasmota32** firmware for all devices
+- Use **hybrid approach** (autoexec-final.be) for automatic configuration
+- Avoid manual Berry updates - use text_rule instead
+
+## Executive Summary
+
+| Device | Firmware | Display | HASPmota | Sensors | Status |
+|--------|----------|---------|----------|---------|--------|
+| **tasmota-101** | tasmota32 | ✅ ST7789 | ✅ Working | ✅ 5x DS18B20 | ✅ **PRODUCTION** |
+| **tasmota-75** | esp32s3geek | ✅ ST7789 | ❌ Labels not created | ✅ 2x BME280 | ⚠️ Firmware issue |
+| **tasmota-77** | esp32s3geek | ✅ ST7789 | ✅ Available | ❌ No sensors | ❌ Hardware issue |
+
 ## Firmware Versions
 
-| Device | Version | Build Date | Core |
-|--------|---------|------------|------|
-| tasmota-101 | 15.0.1 (tasmota32) | 2026-01-10T19:02:35 | 3_1_3 |
-| tasmota-75 | 15.0.1 (esp32s3geek) | 2026-01-11T08:08:31 | ? |
-| tasmota-77 | 15.0.1 (esp32s3geek) | 2026-01-11T10:52:47 | ? |
+| Device | Version | Build Date | Core | Build Type |
+|--------|---------|------------|------|------------|
+| tasmota-101 | 15.0.1 (tasmota32) | 2026-01-10T19:02:35 | 3_1_3 | Standard ESP32 |
+| tasmota-75 | 15.0.1 (esp32s3geek) | 2026-01-11T08:08:31 | ? | Custom ESP32-S3 |
+| tasmota-77 | 15.0.1 (esp32s3geek) | 2026-01-11T10:52:47 | ? | Custom ESP32-S3 |
 
-**Key Difference**: tasmota-101 uses **tasmota32** (standard ESP32 build), others use **esp32s3geek** (custom build)
+**Key Difference**: tasmota-101 uses **tasmota32** (standard ESP32 build) with full HASPmota support. Others use **esp32s3geek** (custom build) with limited/incomplete HASPmota support.
 
 ## GPIO Configuration
 
@@ -161,16 +187,63 @@ Currently has no working GPIO configuration.
 
 ## autoexec.be
 
-### tasmota-101 (MINIMAL, WORKING)
+### tasmota-101 (HYBRID APPROACH - PRODUCTION)
 ```berry
-# simple `autoexec.be` to run HASPmota using the default `pages.jsonl`
+# autoexec-final.be - Hybrid approach
+# 1. Detects DS18B20 sensors dynamically
+# 2. Generates pages.jsonl with text_rule
+# 3. Starts HASPmota
+
 import haspmota
+import json
+import string
+
+# Wait for sensors to initialize
+tasmota.delay(2000)
+
+# Read all sensors
+var m = tasmota.read_sensors()
+if m == nil
+    print("No sensors found")
+    haspmota.start()
+    return
+end
+
+# Detect DS18B20 sensors dynamically
+var ds_sensors = []
+for key: m.keys()
+    if string.find(key, 'DS18B20') == 0 || string.find(key, 'DS18S20') == 0
+        var sensor = m[key]
+        if sensor.contains('Temperature') && sensor.contains('Id')
+            ds_sensors.push({
+                'key': key,
+                'id': sensor['Id']
+            })
+        end
+    end
+end
+
+# Sort sensors alphabetically
+# ... (sorting code)
+
+# Generate pages.jsonl with text_rule
+var pages = []
+# ... (generation code)
+
+# Write pages.jsonl
+var f = open('pages.jsonl', 'w')
+for line: pages
+    f.write(line + '\n')
+end
+f.close()
+
+# Start HASPmota
 haspmota.start()
 ```
 
-**3 lines total!** pages.jsonl does all the work with text_rule.
+**~120 lines** - Fully automatic sensor detection and configuration.
 
-### tasmota-75 (COMPLEX, 263 lines)
+### tasmota-75 (COMPLEX, 263 lines - NOT WORKING)
 ```berry
 import haspmota
 import json
@@ -195,87 +268,200 @@ global.dashboard = SensorDashboard()
 tasmota.add_driver(global.dashboard)
 ```
 
-**263 lines!** Manually updates all LVGL objects.
+**263 lines!** Manually updates all LVGL objects. **Problem**: HASPmota labels not created in esp32s3geek firmware.
+
+### tasmota-77 (HYBRID APPROACH - COPIED FROM 101)
+Same as tasmota-101 hybrid approach, but sensors not detected due to hardware issue (GPIO not connected).
 
 ## Display Status
 
-| Device | DisplayModel | DisplayType | HASPmota | LVGL Mirror | DS18B20 |
-|--------|--------------|-------------|----------|-------------|---------|
-| tasmota-101 | 17 (ST7789) | 0 | ✅ Works | ✅ Available | ✅ 5 sensors |
-| tasmota-75 | 17 (ST7789) | 0 | ❌ Not working | ❓ Unknown | ❌ None |
-| tasmota-77 | 0 (None) | 0 | ❌ Not working | ❌ Not available | ❌ None |
+| Device | DisplayModel | DisplayType | HASPmota | LVGL Mirror | Sensors | Approach |
+|--------|--------------|-------------|----------|-------------|---------|----------|
+| tasmota-101 | 17 (ST7789) | 0 | ✅ Works | ✅ Available | ✅ 5x DS18B20 | ✅ Hybrid (auto) |
+| tasmota-75 | 17 (ST7789) | 0 | ❌ Labels not created | ✅ Available | ✅ 2x BME280 | ❌ Manual (263 lines) |
+| tasmota-77 | 17 (ST7789) | 0 | ✅ Available | ✅ Available | ❌ None detected | ⚠️ Hybrid (no sensors) |
 
-## Key Findings
+## Key Findings (Updated 2026-01-11)
 
-### Why tasmota-101 Works
+### Why tasmota-101 Works ✅
 
-1. **Firmware**: Uses standard **tasmota32** build (not custom esp32s3geek)
-2. **display.ini**: Loaded and initialized correctly
-3. **GPIO 13**: DS18x20 configured correctly
-4. **pages.jsonl**: Uses text_rule for automatic updates
-5. **autoexec.be**: Minimal (3 lines), just starts HASPmota
+1. **Firmware**: Uses standard **tasmota32** build with full HASPmota support
+2. **display.ini**: Loaded and initialized correctly (DisplayModel 17)
+3. **GPIO 13**: DS18x20 configured correctly, 5 sensors detected
+4. **pages.jsonl**: Generated dynamically with text_rule for automatic updates
+5. **autoexec.be**: Hybrid approach (~120 lines) - automatic sensor detection
+6. **HASPmota**: Available and working perfectly
+7. **LVGL Mirror**: Available in Web UI
+
+**Status**: ✅ **PRODUCTION READY** - Hybrid approach deployed successfully
+
+### Why tasmota-75 Has Issues ⚠️
+
+1. **Firmware**: Custom **esp32s3geek** build has incomplete HASPmota support
+2. **display.ini**: Loaded correctly (DisplayModel 17)
+3. **GPIO**: I2C configured, 2x BME280 detected successfully
+4. **pages.jsonl**: Exists but HASPmota labels not created by firmware
+5. **autoexec.be**: Complex manual approach (263 lines) - can't work without labels
+6. **HASPmota**: Available but labels (p1b30, p1b12, etc.) are nil
+7. **LVGL Mirror**: Available in Web UI
+
+**Status**: ⚠️ **Firmware limitation** - HASPmota label creation not working in esp32s3geek build
+
+### Why tasmota-77 Has Issues ❌
+
+1. **Firmware**: Custom **esp32s3geek** build (same as tasmota-75)
+2. **display.ini**: Loaded correctly (DisplayModel 17) - **FIXED!**
+3. **GPIO**: Template configured (GPIO 13 = DS18x20) but **no sensors detected**
+4. **pages.jsonl**: Hybrid version uploaded, ready for sensors
+5. **autoexec.be**: Hybrid approach uploaded (same as tasmota-101)
 6. **HASPmota**: Available and working
+7. **LVGL Mirror**: Available in Web UI
 
-### Why tasmota-75/77 Don't Work
+**Status**: ❌ **Hardware issue** - DS18B20 sensors not physically connected or wrong GPIO
 
-1. **Firmware**: Custom **esp32s3geek** build may have issues
-2. **display.ini**: Not loaded/initialized
-3. **GPIO**: Wrong or missing DS18B20 configuration
-4. **pages.jsonl**: Requires manual Berry updates
-5. **autoexec.be**: Complex (263 lines), tries to update manually
-6. **HASPmota**: Not available or not working
+## Solutions and Recommendations
 
-## Solution for tasmota-77
+### For tasmota-101 ✅
+**Status**: Production ready, no changes needed.
 
-### Option 1: Use tasmota-101 Configuration (RECOMMENDED)
+**Current Configuration**:
+- Firmware: tasmota32 (standard build)
+- Approach: Hybrid (autoexec-final.be)
+- Sensors: 5x DS18B20 auto-detected
+- Display: Working perfectly
 
-1. **GPIO Template**: Copy from tasmota-101
-   - Set GPIO 13 to DS18x20 (1312)
-   - Set GPIO 17/18 to I2C (608/640)
+**Recommendation**: Use as reference for other devices.
 
-2. **display.ini**: Use identical file (already have it)
+### For tasmota-75 ⚠️
+**Problem**: HASPmota labels not created in esp32s3geek firmware.
 
-3. **pages.jsonl**: Use tasmota-101 version with text_rule
+**Solutions**:
 
-4. **autoexec.be**: Use minimal 3-line version
+1. **Option A: Switch to tasmota32 firmware (RECOMMENDED)**
+   - Flash standard tasmota32 build (like tasmota-101)
+   - Use hybrid approach (autoexec-final.be)
+   - Full HASPmota support guaranteed
 
-5. **Firmware**: Consider using standard tasmota32 instead of esp32s3geek
+2. **Option B: Use DisplayText instead of HASPmota**
+   - Bypass HASPmota completely
+   - Use DisplayText commands directly
+   - No LVGL dependency
 
-### Option 2: Fix esp32s3geek Firmware
+3. **Option C: Wait for firmware fix**
+   - Wait for improved HASPmota support in esp32s3geek
+   - Keep current configuration
+   - Monitor Tasmota updates
 
-1. Rebuild firmware with proper LVGL support
-2. Ensure display.ini is loaded at boot
-3. Fix GPIO configuration
-4. Test thoroughly
+**Recommendation**: Switch to tasmota32 firmware for production use.
 
-## Recommended Configuration for tasmota-77
+### For tasmota-77 ❌
+**Problem**: DS18B20 sensors not detected (hardware issue).
 
-```json
-{
-  "NAME": "ESP32S3-Geek",
-  "GPIO": [
-    32,    // GPIO 0: Button
-    1,     // GPIO 1-12: User
-    1312,  // GPIO 13: DS18x20 ← CRITICAL!
-    33,    // GPIO 14: Button_n
-    1,     // GPIO 15-16: User
-    608,   // GPIO 17: I2C SCL
-    640,   // GPIO 18: I2C SDA
-    1,     // GPIO 19-20: User
-    3840,  // GPIO 21: Output Hi
-    6210   // GPIO 22: Option A
-  ]
-}
+**Solutions**:
+
+1. **Option A: Hardware inspection (IMMEDIATE)**
+   - Physically identify which GPIO has DS18B20 sensors
+   - Check wiring and connections
+   - Test sensors with multimeter
+   - Update GPIO template with correct pin
+
+2. **Option B: Systematic GPIO testing**
+   - Test all possible GPIOs one by one
+   - Use template to set DS18x20 on each GPIO
+   - Check sensor detection after each change
+
+3. **Option C: Switch to tasmota32 firmware**
+   - Flash standard tasmota32 build
+   - Better hardware support
+   - Same configuration as tasmota-101
+
+**Recommendation**: Hardware inspection first, then consider firmware switch if needed.
+
+## Firmware Update Results (2026-01-11)
+
+### Custom Firmware Test - FAILED ❌
+
+**Objective**: Build ESP32-S3 firmware with LVGL/HASPmota support
+
+**Approach**:
+- Modified platformio_override.ini for tasmota32s3-lvgl build
+- Modified user_config_override.h with custom configuration
+- Built firmware from Tasmota v15.0.1 source
+
+**Result**:
+- ❌ Both tasmota-75 and tasmota-77 went offline after OTA update
+- ❌ Devices not responding to network requests
+- ❌ Physical access required for recovery
+
+**Root Cause**:
+- Partition scheme mismatch between custom and standard builds
+- Configuration conflicts (custom project name)
+- No safeboot partition for automatic rollback
+
+### Official Firmware Solution - RECOMMENDED ✅
+
+**Firmware**: tasmota32-lvgl.bin 15.2.0
+**Source**: http://ota.tasmota.com/tasmota32/release/tasmota32-lvgl.bin
+**Size**: 2.6 MB
+
+**Features**:
+- ✅ Full LVGL support
+- ✅ HASPmota working
+- ✅ Works on ESP32-S3 (universal ESP32 build)
+- ✅ Tested and stable
+- ✅ Automatic rollback on failed boot
+
+**Status**: Ready for deployment after device recovery
+
+## Current Status Summary (2026-01-11 - After Firmware Tests)
+
+### tasmota-101: ✅ PRODUCTION
+```
+Firmware:     tasmota32 (standard)
+Display:      ✅ ST7789 (DisplayModel 17)
+HASPmota:     ✅ Working
+LVGL Mirror:  ✅ Available
+Sensors:      ✅ 5x DS18B20 detected
+Approach:     ✅ Hybrid (autoexec-final.be)
+Files:        ✅ display.ini, pages.jsonl (generated), autoexec-final.be
+Status:       ✅ PRODUCTION READY
 ```
 
-**Files**:
-- display.ini: Use tasmota-101 version
-- pages.jsonl: Use tasmota-101 version (with text_rule)
-- autoexec.be: Use minimal 3-line version
+### tasmota-75: ❌ OFFLINE (Recovery Required)
+```
+Firmware:     esp32s3geek (custom) - FAILED OTA UPDATE
+Display:      Unknown (device offline)
+HASPmota:     Unknown (device offline)
+LVGL Mirror:  Unknown (device offline)
+Sensors:      2x BME280 (before update)
+Approach:     Hybrid (autoexec-final.be ready)
+Files:        display.ini, autoexec-final.be (ready to upload)
+Status:       ❌ OFFLINE - Needs serial recovery with tasmota32-lvgl-15.2.0.bin
+```
 
-**Expected Result**:
-- ✅ Display initialized
-- ✅ HASPmota working
-- ✅ DS18B20 sensors detected
-- ✅ LVGL Mirror available
-- ✅ Automatic sensor updates
+### tasmota-77: ❌ OFFLINE (Recovery Required)
+```
+Firmware:     esp32s3geek (custom) - FAILED OTA UPDATE
+Display:      Unknown (device offline)
+HASPmota:     Unknown (device offline)
+LVGL Mirror:  Unknown (device offline)
+Sensors:      DS18B20 (hardware not detected before update)
+Approach:     Hybrid (autoexec-final.be ready)
+Files:        display.ini, autoexec-final.be (ready to upload)
+Status:       ❌ OFFLINE - Needs serial recovery with tasmota32-lvgl-15.2.0.bin
+```
+
+## Deployment History
+
+### v7 Release (2026-01-11)
+- ✅ Hybrid approach (autoexec-final.be) developed
+- ✅ Successfully deployed to tasmota-101
+- ✅ All 5 DS18B20 sensors detected automatically
+- ✅ pages.jsonl generated dynamically
+- ✅ Display showing all sensors correctly
+- ✅ Set as default configuration for project
+
+### Next Steps
+1. **tasmota-75**: Flash tasmota32 firmware, deploy hybrid approach
+2. **tasmota-77**: Hardware inspection to find DS18B20 GPIO, then deploy hybrid approach
+3. **Documentation**: Update all references to use hybrid as default
