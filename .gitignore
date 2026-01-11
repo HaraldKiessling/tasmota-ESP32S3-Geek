@@ -5,10 +5,11 @@ Tasmota/
 *.elf
 *.map
 
-# Firmware binaries (except release)
+# Firmware binaries (except release and custom builds)
 *.bin
 !firmware/release/*.bin
 !firmware/release/**/*.bin
+!firmware/tasmota32s3-lvgl-*.bin
 
 # Python
 __pycache__/
