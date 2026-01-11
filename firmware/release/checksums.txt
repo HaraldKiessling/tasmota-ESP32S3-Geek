@@ -1,0 +1,8 @@
+MD5 Checksums - Tasmota ESP32S3-Geek v15.0.1
+Build Date: 2026-01-11
+
+8b3e9b24f7836b5d31bfc86656cb27ff  tasmota32s3geek-v15.0.1-factory.bin
+2ebadc66dffdca28e23954f6eb126007  tasmota32s3geek-v15.0.1.bin
+
+Verify:
+md5sum -c checksums.txt

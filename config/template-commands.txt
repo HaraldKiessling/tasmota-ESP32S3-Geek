@@ -1,0 +1,36 @@
+# Tasmota Template Commands für ESP32S3-Geek
+# Diese Befehle müssen in der Tasmota Console ausgeführt werden
+
+# 1. Template setzen
+Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}
+
+# 2. Module aktivieren
+Module 0
+
+# 3. Device Name setzen
+DeviceName ESP32S3-Geek
+
+# 4. Friendly Name setzen
+FriendlyName Tasmota
+
+# 5. I2C Scan durchführen (zur Überprüfung)
+I2CScan
+
+# 6. Display Konfiguration
+DisplayMode 0
+DisplayRotate 1
+DisplayCols 30
+DisplayRows 8
+DisplayFont 1
+
+# 7. Telemetry Period
+TelePeriod 60
+
+# 8. Save Data
+SaveData 1
+
+# 9. Restart
+Restart 1
+
+# Alternative: Alle Befehle als Backlog
+Backlog Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}; Module 0; DeviceName ESP32S3-Geek; DisplayMode 0; DisplayRotate 1; TelePeriod 60; SaveData 1; Restart 1

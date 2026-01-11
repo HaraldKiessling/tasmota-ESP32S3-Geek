@@ -1,0 +1,49 @@
+# Tasmota Build
+Tasmota/
+.pio/
+.vscode/
+*.elf
+*.map
+
+# Firmware binaries (except release)
+*.bin
+!firmware/release/*.bin
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+env/
+.venv/
+ENV/
+*.egg-info/
+.pytest_cache/
+
+# IDE
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+*.old
+
+# Environment
+.env
+.env.local
+
+# Build artifacts
+build/
+dist/
+firmware/output/
+
+# Keep firmware release directory structure
+!firmware/release/*.bin
+!firmware/release/*.md

@@ -1,0 +1,30 @@
+Tasmota ESP32S3-Geek Firmware
+Version: 15.0.1
+Build Date: 2026-01-11 07:07:00
+by Harald Kiessling
+
+Features:
+- DS18B20 temperature sensors (up to 10 per GPIO)
+- BME280 sensors on I2C (2 devices)
+- ST7789 TFT Display (240x135)
+- MQTT support
+- Berry scripting
+- Web interface
+
+Hardware:
+- Waveshare ESP32S3-Geek Stick
+- ESP32-S3 @ 240MHz
+- 16MB Flash
+- 8MB PSRAM
+
+Firmware Sizes:
+- OTA Update: 2.0 MB (tasmota32s3geek-v15.0.1.bin)
+- Factory: 2.9 MB (tasmota32s3geek-v15.0.1-factory.bin)
+
+Installation:
+1. Flash firmware using esptool.py or Tasmota Web Installer
+2. Configure WiFi and MQTT
+3. Apply template from config/template-commands.txt
+4. Upload autoexec.be for display automation
+
+For more information, see README.md
