@@ -1,0 +1,107 @@
+{
+  "NAME": "ESP32S3-Geek",
+  "COMMENT": "Waveshare ESP32-S3 Geek with DS18B20 sensors on GPIO 6, 13, 14",
+  "GPIO": [
+    32,    
+    0,     
+    0,     
+    0,     
+    0,     
+    0,     
+    1312,  
+    0,     
+    0,     
+    0,     
+    0,     
+    0,     
+    0,     
+    1312,  
+    1312,     
+    0,     
+    640,   
+    608,   
+    0,     
+    0,     
+    0,     
+    0,     
+    8896,  
+    8960,  
+    8800,  
+    8832,  
+    8864,  
+    8928,  
+    0,     
+    6210,  
+    0,     
+    0,     
+    3200,  
+    3232,  
+    0,     
+    0,     
+    0,     
+    0      
+  ],
+  "FLAG": 0,
+  "BASE": 1,
+  "DESCRIPTION": {
+    "GPIO_0": "User (Boot button)",
+    "GPIO_6": "DS18x20 (Temperature Sensor #1)",
+    "GPIO_13": "DS18x20 (Temperature Sensor #2)",
+    "GPIO_14": "DS18x20 (Temperature Sensor #3)",
+    "GPIO_16": "I2C SDA (BME280, etc.)",
+    "GPIO_17": "I2C SCL (BME280, etc.)",
+    "GPIO_22": "Option A1 (User defined)",
+    "GPIO_23": "Option A2 (User defined)",
+    "GPIO_24": "Option A3 (User defined)",
+    "GPIO_25": "Option A4 (User defined)",
+    "GPIO_26": "Option A5 (User defined)",
+    "GPIO_27": "Option A6 (User defined)",
+    "GPIO_29": "TuyaSend (User defined)",
+    "GPIO_32": "Output Hi (User output)",
+    "GPIO_33": "Output Lo (User output)"
+  },
+  "DISPLAY": {
+    "Controller": "ST7789",
+    "Resolution": "240x135",
+    "Interface": "SPI",
+    "GPIO_7": "Display RST (Reset)",
+    "GPIO_8": "Display SCLK (Clock)",
+    "GPIO_9": "Display BL (Backlight)",
+    "GPIO_10": "Display CS (Chip Select)",
+    "GPIO_11": "Display MOSI (Data)",
+    "GPIO_12": "Display DC (Data/Command)",
+    "NOTE": "Display pins managed by display.ini"
+  },
+  "SENSORS": {
+    "DS18B20": {
+      "GPIO_6": "Sensor #1 (e.g., Living Room)",
+      "GPIO_13": "Sensor #2 (e.g., Bedroom)",
+      "GPIO_14": "Sensor #3 (e.g., Outside)",
+      "PULLUP": "4.7kΩ required on each GPIO",
+      "PROTOCOL": "1-Wire",
+      "MAX_PER_GPIO": 10
+    },
+    "I2C": {
+      "GPIO_16": "SDA (Data)",
+      "GPIO_17": "SCL (Clock)",
+      "SUPPORTED": [
+        "BME280 (Temp, Humidity, Pressure)",
+        "BME680 (Temp, Humidity, Pressure, Gas)",
+        "BMP280 (Temp, Pressure)",
+        "SHT3x (Temp, Humidity)",
+        "AHT2x (Temp, Humidity)"
+      ]
+    }
+  },
+  "CONSOLE_COMMAND": "Template {\"NAME\":\"ESP32S3-Geek\",\"GPIO\":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1312,1312,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],\"FLAG\":0,\"BASE\":1}",
+  "SETUP_COMMANDS": [
+    "Template {\"NAME\":\"ESP32S3-Geek\",\"GPIO\":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1312,1312,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],\"FLAG\":0,\"BASE\":1}",
+    "Module 0",
+    "Restart 1"
+  ],
+  "VERIFICATION": [
+    "GPIO",
+    "Status 10",
+    "I2CScan"
+  ]
+}

@@ -2,6 +2,12 @@
 
 Complete hardware specification and pinout for Waveshare ESP32S3-Geek stick.
 
+**📚 Related Documentation**:
+- [GPIO_PINOUT.md](GPIO_PINOUT.md) - Complete GPIO pin mapping with detailed descriptions
+- [DS18X20_CONFIGURATION.md](DS18X20_CONFIGURATION.md) - DS18B20 temperature sensor configuration
+- [DISPLAY_INI_REFERENCE.md](DISPLAY_INI_REFERENCE.md) - Display configuration reference
+- [TEMPLATE_GUIDE.md](../config/TEMPLATE_GUIDE.md) - GPIO template configuration guide
+
 ## Board Specifications
 
 ### Waveshare ESP32S3-Geek

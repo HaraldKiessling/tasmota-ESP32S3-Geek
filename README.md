@@ -1,407 +1,424 @@
 # Tasmota ESP32S3-Geek
 
-**Custom Tasmota firmware for Waveshare ESP32S3-Geek stick**
+Custom Tasmota firmware for Waveshare ESP32S3-Geek with ST7789 display, DS18B20 sensors, and I2C support.
 
 ![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)
-![Version](https://img.shields.io/badge/Version-v7-blue)
 ![Tasmota](https://img.shields.io/badge/Tasmota-15.0.1-orange)
 
-## 🎯 Latest Release: v7 + Custom Firmware (2026-01-11)
-
-**✅ CUSTOM ESP32-S3 LVGL FIRMWARE BUILT**
-- tasmota32s3-lvgl-15.0.1.bin with full HASPmota support
-- 2.5 MB firmware, 87.8% flash usage
-- Compatible partition scheme with esp32s3geek
-- Verified LVGL and HASPmota in binary
-- Ready for serial flash deployment
-
-**✅ HYBRID APPROACH WORKING ON TASMOTA-101**
-- Automatic sensor detection (5x DS18B20)
-- Dynamic pages.jsonl generation
-- Display updates every 2 seconds
-- Production ready configuration
-
-**⚠️ DEVICES IN SAFEBOOT**
-- tasmota-75 and tasmota-77 require serial flash recovery
-- Normal firmware partition damaged from OTA attempts
-- Physical access required for deployment
-
-[📥 Download Custom Firmware](firmware/tasmota32s3-lvgl-15.0.1.bin)  
-[📖 Build Documentation](docs/CUSTOM_FIRMWARE_BUILD_SUCCESS.md)
-
-## Features
-
-✅ **DS18B20 Temperature Sensors** (GPIO 6, 13, 14)  
-✅ **I2C Support** (GPIO 16 SDA, 17 SCL) for BME280, etc.  
-✅ **ST7789 TFT Display** (240x135) with HASPmota  
-✅ **Automatic Display Updates** every 2 seconds  
-✅ **MQTT Integration** with configurable telemetry  
-✅ **OTA Updates** with preserved WiFi settings  
-✅ **Berry Scripting** with minimal configuration  
-✅ **Universal Display Driver** with display.ini  
-✅ **text_rule** based sensor updates (no manual coding)  
-✅ **Complete Documentation** and tested configuration  
-
-## Hardware Specification
-
-### ESP32S3-Geek Pinout
-- **DS18B20**: GPIO 6, 13, or 14
-- **I2C SDA**: GPIO 16
-- **I2C SCL**: GPIO 17
-- **UART TX**: GPIO 43
-- **UART RX**: GPIO 44
-- **Display**: ST7789 (via display.ini)
-
-### Tested Configuration
-- **Board**: Waveshare ESP32S3-Geek
-- **Sensors**: 2x DS18B20 on GPIO 13
-- **Display**: ST7789 240x135 TFT
-- **Status**: ✅ All features working
+---
 
 ## Quick Start
 
-### 2. Flash Firmware
+### 1. Flash Firmware
 
-```bash
-pip3 install esptool
+Download and flash the firmware:
+- [tasmota32s3-lvgl-15.0.1.bin](firmware/tasmota32s3-lvgl-15.0.1.bin) (Recommended)
+- [tasmota32s3-lvgl-15.2.0-fixed.bin](firmware/tasmota32s3-lvgl-15.2.0-fixed.bin) (Experimental)
 
-# Factory install (first time)
-esptool.py --chip esp32s3 --port /dev/ttyUSB0 --baud 921600 \
-  write_flash -z 0x0 firmware/release/v7/tasmota32s3geek-v15.0.1-v7-factory.bin
+### 2. Apply GPIO Template
+
+Open Tasmota console and paste:
+
 ```
-
-### 3. Configure WiFi
-
-1. Connect to AP: `tasmota-XXXXXX`
-2. Open: http://192.168.4.1
-3. Enter WiFi credentials
-
-### 4. Upload Configuration Files
-
-Via web interface (Tools → Manage File system):
-1. Upload `display.ini`
-2. Upload `pages.jsonl`
-3. Upload `autoexec.be`
-
-All files are in `firmware/release/v7/` folder.
-
-### 5. Apply GPIO Template
-
-Via Console:
-```
-Template {"NAME":"ESP32S3-Geek","GPIO":[32,1,1,0,4864,1,1312,1,1,1,1,1,1,1312,1312,1,640,608,1,1,1,3840,6210,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,1,1,1,3200,3232],"FLAG":0,"BASE":1}
+Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1312,1312,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}
 Module 0
 Restart 1
 ```
 
-### 6. Verify
+### 3. Upload Display Configuration
 
-After restart (~30 seconds):
-```bash
-curl -s "http://tasmota-77.local/cm?cmnd=Status%2010" | jq .
-```
+Upload `autoconf/display.ini` to the device filesystem.
 
-You should see DS18B20 sensors detected.
+### 4. Connect Sensors
 
-## Configuration Files
+**DS18B20 Temperature Sensors**:
+- GPIO 6, 13, 14 (with 4.7kΩ pull-up resistor)
+
+**I2C Sensors** (BME280, etc.):
+- GPIO 16 (SDA), GPIO 17 (SCL)
+
+---
+
+## Features
+
+✅ **DS18B20 Temperature Sensors** - Up to 3 sensors on GPIO 6, 13, 14  
+✅ **I2C Support** - BME280, BME680, BMP280, SHT3x, AHT2x  
+✅ **ST7789 Display** - 240x135 TFT with HASPmota  
+✅ **LVGL 9.4.0** - Modern UI framework  
+✅ **MQTT Integration** - Real-time telemetry  
+✅ **Berry Scripting** - Custom automation  
+
+---
+
+## Hardware
+
+**Board**: Waveshare ESP32-S3 Geek  
+**Display**: ST7789 240x135 TFT  
+**MCU**: ESP32-S3-WROOM-1-N4R2  
+**Flash**: 4 MB  
+**PSRAM**: 2 MB  
+
+### GPIO Configuration
+
+| GPIO | Function | Description |
+|------|----------|-------------|
+| 0 | User | Boot button |
+| 6 | DS18x20-1 | Temperature sensor #1 |
+| 7-12 | Display | ST7789 (auto-configured) |
+| 13 | DS18x20-1 | Temperature sensor #2 |
+| 14 | DS18x20-1 | Temperature sensor #3 |
+| 16 | I2C SDA | I2C data line |
+| 17 | I2C SCL | I2C clock line |
+
+See [GPIO_PINOUT.md](docs/GPIO_PINOUT.md) for complete pin mapping.
+
+---
+
+## Documentation
+
+### Hardware Setup
+- [GPIO Pin Mapping](docs/GPIO_PINOUT.md) - Complete GPIO reference
+- [DS18B20 Configuration](docs/DS18X20_CONFIGURATION.md) - Temperature sensor setup
+- [Display Configuration](docs/DISPLAY_INI_REFERENCE.md) - ST7789 display.ini reference
+- [Hardware Overview](docs/HARDWARE.md) - Board specifications
+
+### Configuration
+- [Template Guide](config/TEMPLATE_GUIDE.md) - GPIO template with examples
+- [Template JSON](config/template-with-ds18x20.json) - Ready-to-use template
 
 ### Firmware
-- **tasmota32s3-lvgl-15.0.1.bin** - ✅ Custom ESP32-S3 LVGL firmware (RECOMMENDED)
-- Full LVGL and HASPmota support
-- Compatible partition scheme
-- Ready for serial flash
+- [Build Guide](docs/BUILD_GUIDE.md) - Build custom firmware
+- [Installation Guide](docs/INSTALLATION.md) - Flash and configure
+- [Firmware Update](docs/FIRMWARE_UPDATE_GUIDE.md) - OTA updates
 
-### Recommended Configuration (Hybrid Approach)
-- **autoexec-final.be** - Automatic sensor detection, generates pages.jsonl dynamically
-- **display.ini** - Display driver configuration (ST7789)
-- **template.json** - GPIO configuration with correct pins
+---
 
-### Alternative Configurations
-- **autoexec-101.be** - Minimal (3 lines), requires manual pages.jsonl
-- **pages-final.jsonl** - text_rule based, manual sensor configuration
-- **autoexec-75-dynamic.be** - HASPmota labels, dynamic detection (requires working HASPmota)
+## GPIO Template
 
-See [Scripts Guide](docs/SCRIPTS-GUIDE.md) and [Custom Firmware Build](docs/CUSTOM_FIRMWARE_BUILD_SUCCESS.md) for details.
-
-## Display Features
-- Download: [autoexec.be](config/autoexec.be)
-- Upload über Tasmota Web Interface → Manage File System
-- Restart
-
-## Projektstruktur
-
-```
-tasmota-ESP32S3-Geek/
-├── config/                      # Konfigurationsdateien
-│   ├── autoexec.be             # Berry Display Script
-│   ├── template.json           # GPIO Template
-│   ├── template-commands.txt   # Tasmota Befehle
-│   ├── gpio-mapping.md         # GPIO Dokumentation
-│   └── display-config.md       # Display Konfiguration
-├── docs/                        # Dokumentation
-│   ├── installation.md         # Installationsanleitung
-│   ├── requirements.md         # Anforderungen
-│   └── testing.md              # Test Dokumentation
-├── firmware/                    # Firmware Dateien
-│   ├── tasmota32s3-lvgl-15.0.1.bin  # ✅ Custom LVGL firmware
-│   └── release/                # Release Binaries
-│       ├── tasmota32s3geek-v15.0.1.bin
-│       ├── tasmota32s3geek-v15.0.1-factory.bin
-│       ├── version.txt
-│       └── README.md
-├── scripts/                     # Build & Flash Scripts
-│   ├── build.sh                # Firmware bauen
-│   └── flash.sh                # Firmware flashen
-├── tests/                       # Test Scripts
-│   ├── test-device.sh          # Device Tests
-│   ├── run-all-tests.sh        # Alle Tests
-│   └── results/                # Test Ergebnisse
-├── Tasmota/                     # Tasmota Source (gitignored)
-└── README.md                    # Diese Datei
+```json
+{
+  "NAME": "ESP32S3-Geek",
+  "GPIO": [
+    32,    // GPIO 0:  User (Boot button)
+    0,     // GPIO 1-5: None
+    1312,  // GPIO 6:  DS18x20-1 (Temperature sensor #1)
+    0,     // GPIO 7-12: Display (auto-configured)
+    1312,  // GPIO 13: DS18x20-1 (Temperature sensor #2)
+    1312,  // GPIO 14: DS18x20-1 (Temperature sensor #3)
+    0,     // GPIO 15: None
+    640,   // GPIO 16: I2C SDA
+    608,   // GPIO 17: I2C SCL
+    0,     // GPIO 18-21: None
+    8896,  // GPIO 22: Option A1
+    8960,  // GPIO 23: Option A2
+    8800,  // GPIO 24: Option A3
+    8832,  // GPIO 25: Option A4
+    8864,  // GPIO 26: Option A5
+    8928,  // GPIO 27: Option A6
+    0,     // GPIO 28: None
+    6210,  // GPIO 29: TuyaSend
+    0,     // GPIO 30-31: None
+    3200,  // GPIO 32: Output Hi
+    3232,  // GPIO 33: Output Lo
+    0      // GPIO 34-37: None
+  ],
+  "FLAG": 0,
+  "BASE": 1
+}
 ```
 
-## Dokumentation
-
-### Firmware Build & Deployment
-- [Custom Firmware Build](docs/CUSTOM_FIRMWARE_BUILD_SUCCESS.md) - ✅ Build-Prozess und Ergebnisse
-- [Firmware Test Results](docs/FIRMWARE_TEST_RESULTS.md) - Test-Ergebnisse und Analyse
-- [Firmware Recovery](docs/FIRMWARE_RECOVERY.md) - Recovery-Prozeduren
-- [Final Solution](docs/FINAL_SOLUTION.md) - Empfohlene Lösungen
-
-### Configuration & Testing
-- [Configuration Comparison](docs/CONFIGURATION_COMPARISON.md) - Geräte-Vergleich
-- [Scripts Guide](docs/SCRIPTS-GUIDE.md) - Berry Script Vergleich
-- [Installation Guide](docs/installation.md) - Installationsanleitung
-- [Testing Guide](docs/testing.md) - Test Dokumentation
-
-### Hardware & GPIO
-- [Hardware Specification](docs/HARDWARE.md) - Hardware Details
-- [GPIO Mapping](config/gpio-mapping.md) - GPIO Pin Belegung
-- [Display Config](config/display-config.md) - Display Konfiguration
-
-## Build von Source
-
-### Custom ESP32-S3 LVGL Firmware
-
-**✅ Successfully Built**: tasmota32s3-lvgl-15.0.1.bin
-
-```bash
-# Setup
-cd Tasmota
-python3 -m venv .venv
-.venv/bin/pip install platformio
-
-# Checkout v15.0.1
-git checkout v15.0.1
-
-# Build
-.venv/bin/pio run -e tasmota32s3-lvgl
+**Console Command**:
+```
+Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1312,1312,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}
 ```
 
-**Build Result**:
-- Size: 2.5 MB (87.8% flash)
-- RAM: 18.9% (61892 bytes)
-- Build Time: 393 seconds
-- Features: LVGL, HASPmota, DS18B20, BME280, ST7789
+---
 
-**Output**: `Tasmota/.pio/build/tasmota32s3-lvgl/firmware.bin`
+## DS18B20 Sensor Setup
 
-See [Build Documentation](docs/CUSTOM_FIRMWARE_BUILD_SUCCESS.md) for details.
+### Hardware Wiring
 
-## Sensoren
-
-### DS18B20 (Dallas Temperature)
-
-**Anschluss**:
-- VCC → 3.3V
-- GND → GND
-- DATA → GPIO 32 oder GPIO 33
-- Pull-up: 4.7kΩ zwischen DATA und VCC
-
-**Unterstützung**:
-- Bis zu 10 Sensoren pro GPIO
-- 3 GPIO verfügbar (32, 33, und weitere)
-- Automatische Erkennung
-
-### BME280 (I2C)
-
-**Anschluss**:
-- VCC → 3.3V
-- GND → GND
-- SDA → GPIO 16
-- SCL → GPIO 17
-
-**Adressen**:
-- BME280-76: 0x76 (SDO → GND)
-- BME280-77: 0x77 (SDO → VCC)
-
-**Messwerte**:
-- Temperatur (°C)
-- Luftfeuchtigkeit (%)
-- Luftdruck (hPa)
-
-## Display
-
-**ST7789 TFT Display** (240x135 Pixel):
-- Automatische Anzeige via Berry Script
-- Update alle 5 Sekunden
-- Zeigt: Device Name, WiFi SSID, IP, Zeit, Sensordaten
-
-**Layout**:
 ```
-ESP32S3-Geek
-SSID: <WiFi Name>
-IP: <IP Adresse>
-<Datum> <Uhrzeit>
-BME76: 22.5°C 45%
-BME77: 23.1°C 48%
-DS1: 21.8°C
-DS2: 22.3°C
+DS18B20 Sensor → ESP32S3-Geek
+─────────────────────────────
+VDD (Red)      → 3.3V
+GND (Black)    → GND
+DATA (Yellow)  → GPIO 6/13/14
+                 ↓
+              4.7kΩ pull-up to 3.3V
 ```
 
-## MQTT
+### Multiple Sensors
 
-**Konfiguration**:
-- Web Interface → Configuration → Configure MQTT
-- Host, Port, User, Password eingeben
-- Topic: `tasmota_%06X` (Standard)
+Connect up to 3 sensors on separate GPIOs (6, 13, 14) or up to 10 sensors on a single GPIO using 1-Wire bus.
 
-**Topics**:
-- `tele/tasmota_XXXXXX/SENSOR` - Sensor Daten (alle 60s)
-- `stat/tasmota_XXXXXX/STATUS` - Status Updates
-- `cmnd/tasmota_XXXXXX/POWER` - Befehle
+### Verification
 
-## Testing
-
-### Automatisierte Tests
-
-**Einzelnes Gerät**:
-```bash
-./tests/test-device.sh 192.168.0.75
+```
+Status 10
 ```
 
-**Alle Geräte**:
-```bash
-./tests/run-all-tests.sh
+**Expected Output**:
+```json
+{
+  "DS18B20-5329E2": {
+    "Id": "0000005329E2",
+    "Temperature": 23.1
+  },
+  "DS18B20-51C76D": {
+    "Id": "00000051C76D",
+    "Temperature": 24.6
+  }
+}
 ```
 
-**Test Umgebung**:
-- tasmota-75 (192.168.0.75): Update Installation mit BME280
-- tasmota-77 (192.168.0.77): Neuinstallation mit DS18B20
+See [DS18X20_CONFIGURATION.md](docs/DS18X20_CONFIGURATION.md) for detailed setup.
 
-### Test Ergebnisse
+---
 
-Tests prüfen:
-- ✅ Device Erreichbarkeit
-- ✅ Web Interface
-- ✅ Tasmota Version
-- ✅ Template Konfiguration
-- ✅ WiFi Verbindung
-- ✅ I2C Sensoren
-- ✅ Sensor Daten
-- ✅ Display Konfiguration
-- ✅ MQTT Status
-- ✅ Uptime & Memory
+## Display Configuration
 
-Ergebnisse werden gespeichert in: `tests/results/`
+The ST7789 display is configured via `display.ini`:
 
-## OTA Updates
-
-### Via Web Interface
-1. Firmware hochladen: `tasmota32s3geek-v15.0.1.bin`
-2. "Start Upgrade" klicken
-3. Warten auf Neustart
-
-### Via MQTT
-```bash
-mosquitto_pub -h <broker> -t "cmnd/tasmota_XXXXXX/OtaUrl" \
-  -m "https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/firmware/release/tasmota32s3geek-v15.0.1.bin"
-mosquitto_pub -h <broker> -t "cmnd/tasmota_XXXXXX/Upgrade" -m "1"
+```ini
+:H,ST7789,240,135,16,SPI,1,*,*,*,*,*,*,*,40
+:S,2,1,1,0,40,20
+:I
+EF,3,03,80,02
+CF,3,00,C1,30
+ED,4,64,03,12,81
+E8,3,85,00,78
+CB,5,39,2C,00,34,02
+F7,1,20
+EA,2,00,00
+C0,1,23
+C1,1,10
+C5,2,3e,28
+C7,1,86
+36,1,48
+3A,1,55
+B1,2,00,18
+B6,3,08,82,27
+F2,1,00
+26,1,01
+E0,0F,0F,31,2B,0C,0E,08,4E,F1,37,07,10,03,0E,09,00
+E1,0F,00,0E,14,03,11,07,31,C1,48,08,0F,0C,31,36,0F
+21,0
+11,80,78
+29,80,78
+:o,48
+:A,28,34,28,86
+:R,00,00,87,00,00,28,00,87
+#
 ```
+
+Upload via Tasmota web interface: **Consoles → Manage File System → Upload**
+
+See [DISPLAY_INI_REFERENCE.md](docs/DISPLAY_INI_REFERENCE.md) for detailed explanation.
+
+---
+
+## Firmware Versions
+
+### v15.0.1 (Recommended)
+- **File**: tasmota32s3-lvgl-15.0.1.bin
+- **Size**: 2.5 MB (87.8% flash)
+- **Filesystem**: 1088 KB
+- **Status**: ✅ Production Ready
+- **Features**: LVGL 9.4.0, HASPmota, stable configuration
+
+### v15.2.0-fixed (Experimental)
+- **File**: tasmota32s3-lvgl-15.2.0-fixed.bin
+- **Size**: 2.6 MB (90.3% flash)
+- **Filesystem**: 320 KB
+- **Status**: ⚠️ Experimental
+- **Features**: Extension Manager, Matter support, requires exact configuration
+
+---
+
+## MQTT Integration
+
+### Configuration
+
+```
+Backlog Topic esp32s3-geek; DeviceName ESP32S3-Geek; FriendlyName1 Geek
+TelePeriod 60
+```
+
+### Topics
+
+```
+stat/esp32s3-geek/STATUS10    # Sensor data
+tele/esp32s3-geek/SENSOR      # Telemetry
+cmnd/esp32s3-geek/Power1      # Commands
+```
+
+### Example Payload
+
+```json
+{
+  "Time": "2026-01-12T23:45:00",
+  "DS18B20-5329E2": {
+    "Id": "0000005329E2",
+    "Temperature": 23.1
+  },
+  "TempUnit": "C"
+}
+```
+
+---
+
+## Berry Scripts
+
+### Automatic Display Updates
+
+Create `autoexec.be`:
+
+```berry
+import mqtt
+
+def update_display()
+  var sensors = tasmota.read_sensors()
+  if sensors.contains("DS18B20")
+    for key: sensors.keys()
+      if key.startswith("DS18B20")
+        var temp = sensors[key]["Temperature"]
+        print(f"Sensor {key}: {temp}°C")
+      end
+    end
+  end
+end
+
+tasmota.add_cron("*/2 * * * * *", update_display, "display_update")
+```
+
+See [DS18X20_CONFIGURATION.md](docs/DS18X20_CONFIGURATION.md) for more examples.
+
+---
 
 ## Troubleshooting
 
-### Display bleibt schwarz
-```bash
-# Template prüfen
-Template
+### Sensors Not Detected
 
-# Display Mode setzen
-DisplayMode 0
-DisplayRotate 1
-
-# Berry Script prüfen
-Br load('autoexec.be')
+**Check GPIO configuration**:
+```
+GPIO
 ```
 
-### Sensoren nicht erkannt
-```bash
-# I2C Scan
+Should show:
+```
+GPIO 6:  DS18x20
+GPIO 13: DS18x20
+GPIO 14: DS18x20
+```
+
+**If not, reapply template**:
+```
+Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1312,1312,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}
+Module 0
+Restart 1
+```
+
+### Display Not Working
+
+1. Check template applied: `GPIO`
+2. Verify display.ini uploaded
+3. Restart device: `Restart 1`
+4. Check console for initialization messages
+
+### I2C Devices Not Found
+
+**Scan I2C bus**:
+```
 I2CScan
-
-# DS18B20 prüfen (Pull-up Resistor?)
-Status 8
 ```
 
-### WiFi Probleme
+**Expected output**:
+```json
+{
+  "I2CScan": "Device(s) found at 0x76 0x77"
+}
+```
+
+---
+
+## Build from Source
+
+### Prerequisites
+
 ```bash
-# WiFi Reset
-Reset 1
-
-# WiFi Status
-Status 5
+sudo apt-get install -y git python3 python3-pip python3-venv
 ```
 
-## Changelog
+### Clone and Build
 
-### Version 15.0.1 (2026-01-11)
-- Initial Release
-- Tasmota 15.0.1 Basis
-- ESP32S3-Geek Support
-- DS18B20 Multi-Sensor (bis zu 10 pro GPIO)
-- BME280 Dual-Sensor (I2C)
-- ST7789 Display Integration
-- Berry Display Automation
-- MQTT Support
-- Custom Branding
-- Vollständige Dokumentation
-- Automatisierte Tests
+```bash
+git clone https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek.git
+cd tasmota-ESP32S3-Geek
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -U platformio
+cd Tasmota
+platformio run -e tasmota32s3-lvgl
+```
 
-## Lizenz
+**Output**: `Tasmota/.pio/build/tasmota32s3-lvgl/firmware.bin`
 
-GPL-3.0 (wie Tasmota)
+See [BUILD_GUIDE.md](docs/BUILD_GUIDE.md) for detailed instructions.
 
-## Credits
+---
 
-- **Tasmota**: Theo Arends und Contributors
-- **ESP32S3-Geek Firmware**: Harald Kiessling
-- **Hardware**: Waveshare
+## Project Structure
 
-## Support
+```
+tasmota-ESP32S3-Geek/
+├── README.md                          # This file
+├── autoconf/
+│   └── display.ini                    # Display configuration
+├── config/
+│   ├── TEMPLATE_GUIDE.md              # Template documentation
+│   └── template-with-ds18x20.json     # GPIO template
+├── docs/
+│   ├── GPIO_PINOUT.md                 # GPIO reference
+│   ├── DS18X20_CONFIGURATION.md       # Sensor setup
+│   ├── DISPLAY_INI_REFERENCE.md       # Display reference
+│   ├── HARDWARE.md                    # Hardware specs
+│   ├── BUILD_GUIDE.md                 # Build instructions
+│   ├── INSTALLATION.md                # Installation guide
+│   └── FIRMWARE_UPDATE_GUIDE.md       # Update guide
+├── firmware/
+│   ├── tasmota32s3-lvgl-15.0.1.bin    # Stable firmware
+│   └── tasmota32s3-lvgl-15.2.0-fixed.bin  # Experimental
+└── Tasmota/                           # Tasmota source code
+```
 
-- **GitHub**: https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek
-- **Issues**: https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/issues
-- **Tasmota Docs**: https://tasmota.github.io/docs/
+---
 
-## Links
+## Contributing
 
-### Firmware Downloads
-- [Factory Firmware v15.0.1](https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/firmware/release/tasmota32s3geek-v15.0.1-factory.bin)
-- [OTA Firmware v15.0.1](https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/firmware/release/tasmota32s3geek-v15.0.1.bin)
+Contributions welcome! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Test your changes
+4. Submit a pull request
 
-### Konfiguration
-- [autoexec.be](https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/config/autoexec.be)
-- [template.json](https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/config/template.json)
-- [template-commands.txt](https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/config/template-commands.txt)
+---
 
-### Dokumentation
-- [Installation Guide](docs/installation.md)
-- [Requirements](docs/requirements.md)
-- [Testing Guide](docs/testing.md)
-- [GPIO Mapping](config/gpio-mapping.md)
-- [Display Config](config/display-config.md)
+## License
 
-## Test Geräte
+This project uses Tasmota firmware which is licensed under GPL-3.0.
 
-- **tasmota-75** (https://tasmota-75.samharald.eu): Update Installation mit 2x BME280
-- **tasmota-77** (https://tasmota-77.samharald.eu): Neuinstallation mit 2x DS18B20
+---
+
+## References
+
+- [Tasmota Documentation](https://tasmota.github.io/docs/)
+- [Waveshare ESP32-S3 Geek](https://www.waveshare.com/wiki/ESP32-S3-Geek)
+- [DS18B20 Datasheet](https://www.analog.com/media/en/technical-documentation/data-sheets/DS18B20.pdf)
+- [ST7789 Datasheet](https://www.displayfuture.com/Display/datasheet/controller/ST7789.pdf)
+
+---
+
+**Last Updated**: 2026-01-12  
+**Version**: 1.0  
+**Maintainer**: Harald Kiessling
