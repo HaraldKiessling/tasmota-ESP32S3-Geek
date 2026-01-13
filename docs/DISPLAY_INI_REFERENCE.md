@@ -23,7 +23,7 @@ The `display.ini` file configures the Universal Display Driver in Tasmota. It de
 ### Complete File
 
 ```ini
-:H,ST7789,135,240,16,SPI,3,10,12,11,8,7,9,-1,40 
+:H,ST7789,135,240,16,SPI,3,10,12,11,8,7,9,-1,40
 :S,2,1,3,0,80,30
 :I,01,A0,11,A0,3A,81,55,36,81,00,21,80,13,80,29,A0
 :o,28
@@ -39,9 +39,40 @@ The `display.ini` file configures the Universal Display Driver in Tasmota. It de
 #
 ```
 
-**File Size**: 226 bytes  
+**File Size**: ~220 bytes  
 **Line Ending**: Unix (LF)  
-**Encoding**: ASCII  
+**Encoding**: ASCII
+
+---
+
+## Common Mistakes
+
+### ❌ Multi-line Initialization (causes snow/noise)
+
+```ini
+:I
+01,A0
+11,A0
+3A,81,55
+```
+
+This format causes the display to show random noise ("snow"). The initialization commands are not parsed correctly when split across multiple lines.
+
+### ✅ Correct Single-line Initialization
+
+```ini
+:I,01,A0,11,A0,3A,81,55,36,81,00,21,80,13,80,29,A0
+```
+
+All initialization commands must be on a single line after `:I,`.
+
+### Other Common Errors
+
+| Error | Symptom | Fix |
+|-------|---------|-----|
+| Trailing spaces | Parsing errors | Remove spaces at end of lines |
+| Unknown directives (`:TI2`, `:r`) | Ignored or errors | Remove non-standard lines |
+| Windows line endings (CRLF) | Display malfunction | Convert to Unix (LF) |  
 
 ---
 
