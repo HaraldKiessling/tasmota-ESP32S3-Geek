@@ -13,51 +13,59 @@ class SensorDashboard : Driver
         self.network_counter = 0
     end
     
+    # Hilfsfunktion um HASPmota-Objekte zu holen
+    def get_obj(name)
+        return global.(name)
+    end
+    
     def every_second()
-        # Liest alle Sensordaten als JSON-String und parsed sie
-        var raw_json = tasmota.read_sensors()
-        if raw_json == nil return end
-        
-        var m = json.load(raw_json)
-        if m == nil return end
-        
         # --- Header: IP-Adresse und SSID (nur alle 60 Sekunden) ---
         self.network_counter += 1
         if self.network_counter >= 60
             self.network_counter = 0
             
-            if global.p1b12 != nil
+            var lbl_ip = self.get_obj('p1b12')
+            if lbl_ip != nil
                 var status5 = tasmota.cmd("Status 5", true)
                 if status5 != nil && status5.contains("StatusNET")
                     var net = status5["StatusNET"]
                     if net.contains("IPAddress")
-                        global.p1b12.text = net["IPAddress"]
+                        lbl_ip.text = net["IPAddress"]
                     end
                 end
             end
             
-            if global.p1b13 != nil
+            var lbl_ssid = self.get_obj('p1b13')
+            if lbl_ssid != nil
                 var status11 = tasmota.cmd("Status 11", true)
                 if status11 != nil && status11.contains("StatusSTS")
                     var sts = status11["StatusSTS"]
                     if sts.contains("Wifi") && sts["Wifi"].contains("SSId")
-                        global.p1b13.text = sts["Wifi"]["SSId"]
+                        lbl_ssid.text = sts["Wifi"]["SSId"]
                     end
                 end
             end
         end
         
         # --- Header: Uhrzeit (jede Sekunde) ---
-        if global.p1b14 != nil
+        var lbl_time = self.get_obj('p1b14')
+        if lbl_time != nil
             var rtc = tasmota.rtc()
             if rtc != nil && rtc.contains('local')
-                global.p1b14.text = tasmota.strftime("%H:%M:%S", rtc['local'])
+                lbl_time.text = tasmota.strftime("%H:%M:%S", rtc['local'])
             end
         end
         
+        # --- Sensordaten lesen (optional - funktioniert auch ohne Sensoren) ---
+        var raw_json = tasmota.read_sensors()
+        if raw_json == nil return end
+        
+        var m = json.load(raw_json)
+        if m == nil return end
+        
         # --- BME280 Sensoren zweispaltig (p1b30-p1b31) nur Temperatur ---
         var bme_count = 0
-        var bme_labels = [global.p1b30, global.p1b31]
+        var bme_labels = [self.get_obj('p1b30'), self.get_obj('p1b31')]
         
         # Durchsuche alle Keys nach BME280-*
         for key: m.keys()
@@ -86,11 +94,11 @@ class SensorDashboard : Driver
         
         # --- DS18x20 Sensoren (p1b20-p1b29) DYNAMISCH ---
         var ds_labels = [
-            global.p1b20, global.p1b21,
-            global.p1b22, global.p1b23,
-            global.p1b24, global.p1b25,
-            global.p1b26, global.p1b27,
-            global.p1b28, global.p1b29
+            self.get_obj('p1b20'), self.get_obj('p1b21'),
+            self.get_obj('p1b22'), self.get_obj('p1b23'),
+            self.get_obj('p1b24'), self.get_obj('p1b25'),
+            self.get_obj('p1b26'), self.get_obj('p1b27'),
+            self.get_obj('p1b28'), self.get_obj('p1b29')
         ]
         
         var ds_count = 0
@@ -154,3 +162,31 @@ global.dashboard = SensorDashboard()
 
 # Registriere Driver
 tasmota.add_driver(global.dashboard)
+
+# Initiale Netzwerk-Abfrage nach 5 Sekunden (damit WLAN verbunden ist)
+tasmota.set_timer(5000, def ()
+    var d = global.dashboard
+    if d == nil return end
+    
+    var lbl_ip = d.get_obj('p1b12')
+    if lbl_ip != nil
+        var status5 = tasmota.cmd("Status 5", true)
+        if status5 != nil && status5.contains("StatusNET")
+            var net = status5["StatusNET"]
+            if net.contains("IPAddress")
+                lbl_ip.text = net["IPAddress"]
+            end
+        end
+    end
+    
+    var lbl_ssid = d.get_obj('p1b13')
+    if lbl_ssid != nil
+        var status11 = tasmota.cmd("Status 11", true)
+        if status11 != nil && status11.contains("StatusSTS")
+            var sts = status11["StatusSTS"]
+            if sts.contains("Wifi") && sts["Wifi"].contains("SSId")
+                lbl_ssid.text = sts["Wifi"]["SSId"]
+            end
+        end
+    end
+end)
