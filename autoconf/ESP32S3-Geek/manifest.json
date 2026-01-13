@@ -4,21 +4,23 @@
   "board": "ESP32-S3",
   "vendor": "Waveshare",
   "url": "https://www.waveshare.com/esp32-s3-geek.htm",
-  "comment": "ESP32-S3 development board with 240x135 TFT display, DS18B20 and BME280 sensor support",
+  "comment": "ESP32-S3 development board with 240x135 TFT display, DS18B20 and I2C sensor support",
   "author": "Harald Kiessling",
-  "version": "1.0.0",
-  "date": "2026-01-11",
+  "version": "1.1.0",
+  "date": "2026-01-12",
   "features": [
     "ST7789 TFT Display 240x135",
-    "DS18B20 Temperature Sensors (GPIO 32, 33)",
-    "BME280 I2C Sensors (0x76, 0x77)",
-    "LVGL Graphics",
+    "DS18B20 Temperature Sensors (GPIO 6, 13, 14)",
+    "I2C Support (GPIO 16 SDA, 17 SCL)",
+    "BME280/BME680/BMP280 Sensors",
+    "LVGL 9.4.0 Graphics",
+    "HASPmota UI",
     "Berry Scripting",
-    "MQTT"
+    "MQTT Integration"
   ],
   "template": {
     "NAME": "ESP32S3-Geek",
-    "GPIO": [32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],
+    "GPIO": [32,0,0,0,0,0,1312,0,0,0,0,0,0,1312,1312,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],
     "FLAG": 0,
     "BASE": 1
   },
