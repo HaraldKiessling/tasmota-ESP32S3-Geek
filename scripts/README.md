@@ -181,9 +181,7 @@ TASMOTA_URL=https://your-device-url/ ./regression-test.sh
 
 ## Configuration Files
 
-The scripts use configuration files from:
-1. `../config/` (primary)
-2. `../firmware/release/v7/` (fallback)
+The scripts use configuration files from `../config/`:
 
 Required files:
 - `display.ini` - ST7789 display configuration

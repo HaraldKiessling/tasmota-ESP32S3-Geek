@@ -116,53 +116,31 @@ echo "Step 2: Uploading configuration files..."
 
 # Check if config files exist
 if [ ! -d "$CONFIG_DIR" ]; then
-    echo -e "${YELLOW}WARNING: Config directory not found: $CONFIG_DIR${NC}"
-    echo "  Trying firmware/release/v7 instead..."
-    CONFIG_DIR="${SCRIPT_DIR}/../firmware/release/v7"
+    echo -e "${RED}ERROR: Config directory not found: $CONFIG_DIR${NC}"
+    exit 1
 fi
 
 UPLOAD_SUCCESS=true
 
 # Upload display.ini
-DISPLAY_FILE=""
-if [ -f "${SCRIPT_DIR}/../config/display.ini" ]; then
-    DISPLAY_FILE="${SCRIPT_DIR}/../config/display.ini"
-elif [ -f "${SCRIPT_DIR}/../firmware/release/v7/display.ini" ]; then
-    DISPLAY_FILE="${SCRIPT_DIR}/../firmware/release/v7/display.ini"
-fi
-
-if [ -n "$DISPLAY_FILE" ]; then
-    upload_file "$DISPLAY_FILE" || UPLOAD_SUCCESS=false
+if [ -f "${CONFIG_DIR}/display.ini" ]; then
+    upload_file "${CONFIG_DIR}/display.ini" || UPLOAD_SUCCESS=false
 else
     echo -e "  ${RED}ERROR: display.ini not found${NC}"
     UPLOAD_SUCCESS=false
 fi
 
 # Upload autoexec.be
-AUTOEXEC_FILE=""
-if [ -f "${SCRIPT_DIR}/../config/autoexec.be" ]; then
-    AUTOEXEC_FILE="${SCRIPT_DIR}/../config/autoexec.be"
-elif [ -f "${SCRIPT_DIR}/../firmware/release/v7/autoexec.be" ]; then
-    AUTOEXEC_FILE="${SCRIPT_DIR}/../firmware/release/v7/autoexec.be"
-fi
-
-if [ -n "$AUTOEXEC_FILE" ]; then
-    upload_file "$AUTOEXEC_FILE" || UPLOAD_SUCCESS=false
+if [ -f "${CONFIG_DIR}/autoexec.be" ]; then
+    upload_file "${CONFIG_DIR}/autoexec.be" || UPLOAD_SUCCESS=false
 else
     echo -e "  ${RED}ERROR: autoexec.be not found${NC}"
     UPLOAD_SUCCESS=false
 fi
 
 # Upload pages.jsonl
-PAGES_FILE=""
-if [ -f "${SCRIPT_DIR}/../config/pages.jsonl" ]; then
-    PAGES_FILE="${SCRIPT_DIR}/../config/pages.jsonl"
-elif [ -f "${SCRIPT_DIR}/../firmware/release/v7/pages.jsonl" ]; then
-    PAGES_FILE="${SCRIPT_DIR}/../firmware/release/v7/pages.jsonl"
-fi
-
-if [ -n "$PAGES_FILE" ]; then
-    upload_file "$PAGES_FILE" || UPLOAD_SUCCESS=false
+if [ -f "${CONFIG_DIR}/pages.jsonl" ]; then
+    upload_file "${CONFIG_DIR}/pages.jsonl" || UPLOAD_SUCCESS=false
 else
     echo -e "  ${RED}ERROR: pages.jsonl not found${NC}"
     UPLOAD_SUCCESS=false
