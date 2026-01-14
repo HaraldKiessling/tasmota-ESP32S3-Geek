@@ -1,49 +1,73 @@
-# Tasmota32 S3 LVGL v15.2.0 Firmware
+# Tasmota32 S3 LVGL v15.2.0-full Firmware
 
-**⚠️ Experimental Release - Use with caution**
+Custom build for ESP32-S3 Geek with all features enabled.
 
 ## Quick Start
 
 ### Download
 
-- **OTA**: `tasmota32s3-lvgl-15.2.0-fixed.bin` (2.6 MB)
-- **Factory**: `tasmota32s3-lvgl-15.2.0-fixed.factory.bin` (3.5 MB)
+- **OTA**: `tasmota32s3-lvgl-15.2.0-full.bin` (2.6 MB)
+- **Factory**: `tasmota32s3-lvgl-15.2.0-full.factory.bin` (3.5 MB)
 
 ### Flash
 
 ```bash
 esptool.py --chip esp32s3 --port /dev/ttyUSB0 --baud 921600 \
-  write_flash -z 0x0 tasmota32s3-lvgl-15.2.0-fixed.factory.bin
+  write_flash -z 0x0 tasmota32s3-lvgl-15.2.0-full.factory.bin
+```
+
+**Windows:**
+```powershell
+python -m esptool --chip esp32s3 --port COM7 --baud 921600 write-flash 0x0 tasmota32s3-lvgl-15.2.0-full.factory.bin
 ```
 
 ### Configure
 
-1. WiFi: Connect to AP `tasmota-XXXXXX`
-2. GPIO: Apply template from [RELEASE_v15.2.0.md](../RELEASE_v15.2.0.md)
-3. Files: Upload `display.ini`, `autoexec.be`, `pages.jsonl`
-4. **Important**: Use correct display.ini from `config/display-working-v15.2.0.ini`
-
-## ⚠️ Important
-
-**This version requires exact configuration!**
-
-- Wrong display.ini causes boot loops
-- Less tolerant than v15.0.1
-- Recommended for advanced users only
-
-**For production: Use v15.0.1 instead**
+1. WiFi: Connect to AP `tasmota-XXXXXX`, configure at `http://192.168.4.1`
+2. Upload files: `display.ini`, `autoexec.be`, `pages.jsonl`
+3. Apply template (in console):
+   ```
+   Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1312,1312,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}
+   Module 0
+   DisplayRotate 1
+   Restart 1
+   ```
 
 ## Features
 
-✅ Extension Manager  
-✅ Matter Protocol  
-✅ LVGL 9.4.0  
-✅ HASPmota  
-✅ Berry Scripting  
+- ✅ Berry Scripting
+- ✅ LVGL Graphics
+- ✅ HASPmota
+- ✅ Extension Manager
+- ✅ DS18x20 Temperature Sensors
+- ✅ BME280/BME680 I2C Sensors
+- ✅ Rules Engine
+- ✅ File System (12MB)
+
+## Automated Installation
+
+Use the scripts in `scripts/` directory:
+
+```bash
+# Set WiFi credentials
+export WIFI_SSID="your_ssid"
+export WIFI_PASS="your_password"
+export TASMOTA_URL="http://192.168.0.77"
+
+# After flashing and WiFi config, upload files via Berry
+./scripts/upload-via-berry.sh ../config/display.ini
+./scripts/upload-via-berry.sh ../config/autoexec.be
+./scripts/upload-via-berry.sh ../config/pages.jsonl
+
+# Run regression tests
+./scripts/regression-test.sh
+```
 
 ## Documentation
 
-See [RELEASE_v15.2.0.md](../RELEASE_v15.2.0.md) for complete documentation.
+- [Flash Tools](../flash/README.md)
+- [Scripts](../scripts/README.md)
+- [GPIO Pinout](../docs/GPIO_PINOUT.md)
 
 ## Support
 
@@ -52,6 +76,6 @@ See [RELEASE_v15.2.0.md](../RELEASE_v15.2.0.md) for complete documentation.
 
 ---
 
-**Version**: 15.2.0-fixed  
-**Date**: 2026-01-12  
-**Status**: Experimental
+**Version**: 15.2.0-full  
+**Date**: 2026-01-14  
+**Status**: Tested

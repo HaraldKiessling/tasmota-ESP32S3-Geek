@@ -9,7 +9,7 @@ Tools for flashing Tasmota firmware with pre-configured settings.
 ```bash
 # Flash factory firmware
 esptool.py --chip esp32s3 --port /dev/ttyUSB0 --baud 921600 \
-  write_flash -z 0x0 ../firmware/tasmota32s3-lvgl-15.2.0.factory.bin
+  write_flash -z 0x0 ../firmware/tasmota32s3-lvgl-15.2.0-full.factory.bin
 
 # Then:
 # 1. Connect to AP 'tasmota-XXXXXX'

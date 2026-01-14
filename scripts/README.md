@@ -2,7 +2,66 @@
 
 Automation scripts for managing Tasmota devices on ESP32-S3 Geek hardware.
 
+## Quick Start
+
+### Full Regression Test (Network only)
+
+```bash
+TASMOTA_URL=http://192.168.0.77 ./full-regression.sh
+```
+
+This resets the device, uploads config files, and runs all tests.
+
+### Factory Reset with Firmware Flash (USB required)
+
+```bash
+WIFI_SSID="your_ssid" WIFI_PASS="your_password" SERIAL_PORT=/dev/ttyUSB0 ./factory-reset-and-test.sh
+```
+
+This flashes firmware, configures WiFi, uploads files, and runs tests.
+
+---
+
 ## Scripts
+
+### full-regression.sh
+
+Complete regression test cycle via network:
+1. Reset device (keep WiFi)
+2. Upload configuration files via Berry
+3. Apply template and settings
+4. Run regression tests
+
+**Usage:**
+```bash
+TASMOTA_URL=http://192.168.0.77 ./full-regression.sh
+```
+
+---
+
+### factory-reset-and-test.sh
+
+Complete factory reset including firmware flash:
+1. Flash firmware via USB
+2. Configure WiFi (manual step)
+3. Upload configuration files
+4. Apply template
+5. Run regression tests
+
+**Usage:**
+```bash
+WIFI_SSID="your_ssid" WIFI_PASS="your_password" ./factory-reset-and-test.sh
+```
+
+**Windows PowerShell:**
+```powershell
+$env:WIFI_SSID="your_ssid"
+$env:WIFI_PASS="your_password"
+$env:SERIAL_PORT="COM7"
+bash ./factory-reset-and-test.sh
+```
+
+---
 
 ### regression-test.sh
 
