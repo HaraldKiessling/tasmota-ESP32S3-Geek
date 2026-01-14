@@ -41,6 +41,10 @@ ENV/
 .env
 .env.local
 
+# Flash tools with credentials
+flash/init.bat
+flash/filesystem.bin
+
 # Build artifacts
 build/
 dist/
