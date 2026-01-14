@@ -269,11 +269,13 @@ else
     test_result "Template Name" "WARN" "Name is: $NAME"
 fi
 
-# Check GPIO configuration
-if echo "$TEMPLATE" | grep -q "1312"; then
-    test_result "DS18x20 GPIO Config" "PASS"
+# Check GPIO configuration - DS18x20 buses use 1312, 1313, 1314
+if echo "$TEMPLATE" | grep -q "1312" && echo "$TEMPLATE" | grep -q "1313" && echo "$TEMPLATE" | grep -q "1314"; then
+    test_result "DS18x20 GPIO Config" "PASS" "All 3 buses configured (1312, 1313, 1314)"
+elif echo "$TEMPLATE" | grep -q "1312"; then
+    test_result "DS18x20 GPIO Config" "WARN" "Only DS18x20-1 (1312) configured"
 else
-    test_result "DS18x20 GPIO Config" "WARN" "DS18x20 (1312) not in template"
+    test_result "DS18x20 GPIO Config" "WARN" "DS18x20 not in template"
 fi
 
 if echo "$TEMPLATE" | grep -q "640"; then
