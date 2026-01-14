@@ -216,9 +216,13 @@ Parameters:
 | 1314 | DS18x20-3 | 1-Wire temperature sensor bus 3 |
 | 3200 | Serial Tx | UART transmit |
 | 3232 | Serial Rx | UART receive |
-| 3840 | Output Hi | Digital output (high) |
-| 4864 | ADC Range | Analog input |
-| 6210 | Option A | Special function |
+| 6210 | Neopixel | WS2812 RGB LED |
+| 8800 | SPI DC | Display Data/Command |
+| 8832 | SPI CS | Display Chip Select |
+| 8864 | SPI RST | Display Reset |
+| 8896 | SPI CLK | Display Clock |
+| 8928 | SPI Backlight | Display Backlight |
+| 8960 | SPI MOSI | Display Data Out |
 
 ## Wiring Examples
 

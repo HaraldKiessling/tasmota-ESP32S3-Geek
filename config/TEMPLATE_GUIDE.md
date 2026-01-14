@@ -49,14 +49,14 @@ Backlog Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,13
     0,     // GPIO 19: None (USB D-)
     0,     // GPIO 20: None (USB D+)
     0,     // GPIO 21: None
-    8896,  // GPIO 22: Option A1
-    8960,  // GPIO 23: Option A2
-    8800,  // GPIO 24: Option A3
-    8832,  // GPIO 25: Option A4
-    8864,  // GPIO 26: Option A5
-    8928,  // GPIO 27: Option A6
+    8896,  // GPIO 22: SPI CLK (Display)
+    8960,  // GPIO 23: SPI MOSI (Display)
+    8800,  // GPIO 24: SPI DC (Display)
+    8832,  // GPIO 25: SPI CS (Display)
+    8864,  // GPIO 26: SPI RST (Display)
+    8928,  // GPIO 27: SPI Backlight (Display)
     0,     // GPIO 28: None
-    6210,  // GPIO 29: TuyaSend
+    6210,  // GPIO 29: Neopixel
     0,     // GPIO 30: None
     0,     // GPIO 31: None
     3200,  // GPIO 32: Output Hi
@@ -174,13 +174,13 @@ GPIO 12: Display DC (Data/Command)
 | `1314` | DS18x20-3 | Dallas temperature sensor bus 3 |
 | `3200` | Output Hi | Digital output (high) |
 | `3232` | Output Lo | Digital output (low) |
-| `6210` | TuyaSend | Tuya protocol |
-| `8800` | Option A3 | User-defined option |
-| `8832` | Option A4 | User-defined option |
-| `8864` | Option A5 | User-defined option |
-| `8896` | Option A1 | User-defined option |
-| `8928` | Option A6 | User-defined option |
-| `8960` | Option A2 | User-defined option |
+| `6210` | Neopixel | WS2812 RGB LED |
+| `8800` | SPI DC | Display Data/Command |
+| `8832` | SPI CS | Display Chip Select |
+| `8864` | SPI RST | Display Reset |
+| `8896` | SPI CLK | Display Clock |
+| `8928` | SPI Backlight | Display Backlight |
+| `8960` | SPI MOSI | Display Data Out |
 
 ### Finding Function Codes
 

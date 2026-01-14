@@ -29,8 +29,10 @@ NC='\033[0m'
 
 # GPIO Template for ESP32S3-Geek hardware
 # Maps physical GPIO pins to Tasmota functions:
-#   32=Button, 1312-1314=DS18x20 buses, 640/608=I2C SDA/SCL,
-#   8800-8960=SPI Display, 6210=Neopixel, 3200/3232=UART TX/RX
+#   32=Button, 1312-1314=DS18x20 buses (GPIO 6,13,14), 640/608=I2C SDA/SCL (GPIO 16,17)
+#   8896/8960/8800/8832/8864/8928=SPI Display (GPIO 22-27), 6210=Neopixel (GPIO 29)
+#   3200/3232=UART TX/RX (GPIO 32,33)
+# Display GPIOs (22-27) require explicit SPI codes for ST7789 to work
 TEMPLATE='{"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}'
 
 echo "========================================"

@@ -35,12 +35,12 @@
 | **GPIO 19** | USB D- | - | USB Data | USB CDC |
 | **GPIO 20** | USB D+ | - | USB Data | USB CDC |
 | **GPIO 21** | - | None | Reserved | - |
-| **GPIO 22** | - | Option A1 (8896) | User defined | - |
-| **GPIO 23** | - | Option A2 (8960) | User defined | - |
-| **GPIO 24** | - | Option A3 (8800) | User defined | - |
-| **GPIO 25** | - | Option A4 (8832) | User defined | - |
-| **GPIO 26** | - | Option A5 (8864) | User defined | - |
-| **GPIO 27** | - | Option A6 (8928) | User defined | - |
+| **GPIO 22** | SPI CLK | SPI CLK (8896) | ST7789 Display | Required |
+| **GPIO 23** | SPI MOSI | SPI MOSI (8960) | ST7789 Display | Required |
+| **GPIO 24** | SPI DC | SPI DC (8800) | ST7789 Display | Required |
+| **GPIO 25** | SPI CS | SPI CS (8832) | ST7789 Display | Required |
+| **GPIO 26** | SPI RST | SPI RST (8864) | ST7789 Display | Required |
+| **GPIO 27** | SPI BL | SPI Backlight (8928) | ST7789 Display | Required |
 | **GPIO 28** | - | None | Reserved | - |
 | **GPIO 29** | - | TuyaSend (6210) | User defined | - |
 | **GPIO 30** | - | None | Reserved | - |
@@ -316,12 +316,12 @@ Power Configuration
     0,     // GPIO 19: None (USB D-)
     0,     // GPIO 20: None (USB D+)
     0,     // GPIO 21: None
-    8896,  // GPIO 22: Option A1
-    8960,  // GPIO 23: Option A2
-    8800,  // GPIO 24: Option A3
-    8832,  // GPIO 25: Option A4
-    8864,  // GPIO 26: Option A5
-    8928,  // GPIO 27: Option A6
+    8896,  // GPIO 22: SPI CLK (Display)
+    8960,  // GPIO 23: SPI MOSI (Display)
+    8800,  // GPIO 24: SPI DC (Display)
+    8832,  // GPIO 25: SPI CS (Display)
+    8864,  // GPIO 26: SPI RST (Display)
+    8928,  // GPIO 27: SPI Backlight (Display)
     0,     // GPIO 28: None
     6210,  // GPIO 29: TuyaSend
     0,     // GPIO 30: None
@@ -349,14 +349,21 @@ Backlog Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,13
 | Code | Function | Description |
 |------|----------|-------------|
 | 0 | None | Pin not used |
-| 1 | DS18x20 | Dallas temperature sensor |
 | 32 | User | User button/input |
 | 608 | I2C SCL | I2C clock line |
 | 640 | I2C SDA | I2C data line |
+| 1312 | DS18x20-1 | Dallas temperature sensor bus 1 |
+| 1313 | DS18x20-2 | Dallas temperature sensor bus 2 |
+| 1314 | DS18x20-3 | Dallas temperature sensor bus 3 |
 | 3200 | Output Hi | Digital output (high) |
 | 3232 | Output Lo | Digital output (low) |
-| 6210 | TuyaSend | Tuya protocol |
-| 8800-8928 | Option A1-A6 | User-defined options |
+| 6210 | Neopixel | WS2812 RGB LED |
+| 8800 | SPI DC | Display Data/Command |
+| 8832 | SPI CS | Display Chip Select |
+| 8864 | SPI RST | Display Reset |
+| 8896 | SPI CLK | Display Clock |
+| 8928 | SPI Backlight | Display Backlight |
+| 8960 | SPI MOSI | Display Data Out |
 
 ---
 
