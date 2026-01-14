@@ -70,12 +70,13 @@ The base template uses `1` (User) for sensor GPIOs, allowing flexible configurat
     6210,  // GPIO 29: Neopixel
     0,     // GPIO 30: None
     0,     // GPIO 31: None
-    3200,  // GPIO 32: Output Hi
-    3232,  // GPIO 33: Output Lo
+    0,     // GPIO 32: None
+    0,     // GPIO 33: None
     0,     // GPIO 34: None
     0,     // GPIO 35: None
     0,     // GPIO 36: None
     0      // GPIO 37: None
+    // GPIO 43/44: Hardware UART (TX/RX) - outside template range
   ],
   "FLAG": 0,
   "BASE": 1
@@ -177,14 +178,13 @@ GPIO 12: Display DC (Data/Command)
 | Code | Function | Description |
 |------|----------|-------------|
 | `0` | None | Pin not used or auto-configured |
-| `32` | User | User button/input |
+| `1` | User | Available for configuration via gpio command |
+| `32` | Button | User button/input |
 | `608` | I2C SCL | I2C clock line |
 | `640` | I2C SDA | I2C data line |
 | `1312` | DS18x20-1 | Dallas temperature sensor bus 1 |
 | `1313` | DS18x20-2 | Dallas temperature sensor bus 2 |
 | `1314` | DS18x20-3 | Dallas temperature sensor bus 3 |
-| `3200` | Output Hi | Digital output (high) |
-| `3232` | Output Lo | Digital output (low) |
 | `6210` | Neopixel | WS2812 RGB LED |
 | `8800` | SPI DC | Display Data/Command |
 | `8832` | SPI CS | Display Chip Select |
@@ -192,6 +192,8 @@ GPIO 12: Display DC (Data/Command)
 | `8896` | SPI CLK | Display Clock |
 | `8928` | SPI Backlight | Display Backlight |
 | `8960` | SPI MOSI | Display Data Out |
+
+**UART**: GPIO 43 (TX) / 44 (RX) are hardware UART pins outside the template range (0-37). Use `SerialSend` commands for serial communication.
 
 ### Finding Function Codes
 

@@ -34,8 +34,15 @@ Complete hardware specification and pinout for Waveshare ESP32S3-Geek stick.
 | 14 | DS18x20 | 1-Wire | DS18B20 temperature sensor |
 | 16 | I2C SDA | I2C | For BME280, etc. |
 | 17 | I2C SCL | I2C | For BME280, etc. |
-| 43 | UART TX | UART | Serial transmit |
-| 44 | UART RX | UART | Serial receive |
+
+### UART Pins (Hardware)
+
+| GPIO | Function | Notes |
+|------|----------|-------|
+| 43 | UART TX | Hardware serial transmit (U0TXD) |
+| 44 | UART RX | Hardware serial receive (U0RXD) |
+
+**Note**: GPIO 43/44 are outside the Tasmota template range (0-37) and cannot be configured via template or `gpio` command. They are used by the ESP32-S3 hardware UART and accessible via Tasmota's `SerialSend` commands.
 
 ### Display Pins (Internal)
 
@@ -207,15 +214,13 @@ Parameters:
 | Code | Function | Description |
 |------|----------|-------------|
 | 0 | None | Not used |
-| 1 | User | Available for user |
+| 1 | User | Available for configuration |
 | 32 | Button | Physical button |
 | 608 | I2C SCL | I2C clock |
 | 640 | I2C SDA | I2C data |
 | 1312 | DS18x20-1 | 1-Wire temperature sensor bus 1 |
 | 1313 | DS18x20-2 | 1-Wire temperature sensor bus 2 |
 | 1314 | DS18x20-3 | 1-Wire temperature sensor bus 3 |
-| 3200 | Serial Tx | UART transmit |
-| 3232 | Serial Rx | UART receive |
 | 6210 | Neopixel | WS2812 RGB LED |
 | 8800 | SPI DC | Display Data/Command |
 | 8832 | SPI CS | Display Chip Select |
@@ -223,6 +228,8 @@ Parameters:
 | 8896 | SPI CLK | Display Clock |
 | 8928 | SPI Backlight | Display Backlight |
 | 8960 | SPI MOSI | Display Data Out |
+
+**UART**: Hardware UART on GPIO 43 (TX) / 44 (RX) - outside template range, use `SerialSend` commands.
 
 ## Wiring Examples
 

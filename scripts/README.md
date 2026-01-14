@@ -229,6 +229,7 @@ Key GPIO assignments:
 - GPIO 16: I2C SDA (code 640)
 - GPIO 17: I2C SCL (code 608)
 - GPIO 22-27: SPI Display (codes 8896, 8960, 8800, 8832, 8864, 8928)
+- GPIO 43/44: Hardware UART TX/RX (outside template range, use `SerialSend`)
 
 ---
 

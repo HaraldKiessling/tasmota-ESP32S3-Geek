@@ -45,9 +45,13 @@
 | **GPIO 29** | - | TuyaSend (6210) | User defined | - |
 | **GPIO 30** | - | None | Reserved | - |
 | **GPIO 31** | - | None | Reserved | - |
-| **GPIO 32** | - | Output Hi (3200) | User output | - |
-| **GPIO 33** | - | Output Lo (3232) | User output | - |
+| **GPIO 32** | - | None | Reserved | - |
+| **GPIO 33** | - | None | Reserved | - |
 | **GPIO 34-37** | - | None | Reserved | - |
+| **GPIO 43** | UART TX | Hardware | Serial transmit | Outside template range |
+| **GPIO 44** | UART RX | Hardware | Serial receive | Outside template range |
+
+**Note**: GPIO 43/44 are hardware UART pins (U0TXD/U0RXD) and cannot be configured via Tasmota template (limited to GPIO 0-37). Use `SerialSend` commands to communicate.
 
 ---
 
@@ -326,8 +330,8 @@ Power Configuration
     6210,  // GPIO 29: Neopixel
     0,     // GPIO 30: None
     0,     // GPIO 31: None
-    3200,  // GPIO 32: Output Hi
-    3232,  // GPIO 33: Output Lo
+    0,     // GPIO 32: None
+    0,     // GPIO 33: None
     0,     // GPIO 34: None
     0,     // GPIO 35: None
     0,     // GPIO 36: None
@@ -362,14 +366,13 @@ Backlog gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608
 | Code | Function | Description |
 |------|----------|-------------|
 | 0 | None | Pin not used |
-| 32 | User | User button/input |
+| 1 | User | Available for configuration |
+| 32 | Button | User button/input |
 | 608 | I2C SCL | I2C clock line |
 | 640 | I2C SDA | I2C data line |
 | 1312 | DS18x20-1 | Dallas temperature sensor bus 1 |
 | 1313 | DS18x20-2 | Dallas temperature sensor bus 2 |
 | 1314 | DS18x20-3 | Dallas temperature sensor bus 3 |
-| 3200 | Output Hi | Digital output (high) |
-| 3232 | Output Lo | Digital output (low) |
 | 6210 | Neopixel | WS2812 RGB LED |
 | 8800 | SPI DC | Display Data/Command |
 | 8832 | SPI CS | Display Chip Select |
@@ -377,6 +380,8 @@ Backlog gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608
 | 8896 | SPI CLK | Display Clock |
 | 8928 | SPI Backlight | Display Backlight |
 | 8960 | SPI MOSI | Display Data Out |
+
+**UART**: GPIO 43 (TX) and GPIO 44 (RX) are hardware UART pins outside the template range. Use `SerialSend` and `SerialReceived` for serial communication.
 
 ---
 
