@@ -57,6 +57,23 @@ TASMOTA_URL=https://your-device-url/ ./auto-install.sh
 
 ---
 
+### upload-via-berry.sh
+
+Uploads files to Tasmota via Berry scripting. Use this when normal HTTP upload fails.
+
+**Usage:**
+```bash
+TASMOTA_URL=http://192.168.0.77 ./upload-via-berry.sh ../config/autoexec.be
+TASMOTA_URL=http://192.168.0.77 ./upload-via-berry.sh ../config/pages.jsonl
+```
+
+**How it works:**
+- Creates the file on the device
+- Writes content line by line via Berry commands
+- Works around HTTP upload issues
+
+---
+
 ### reset-device.sh
 
 Resets device configuration while preserving WiFi settings.

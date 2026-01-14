@@ -30,9 +30,13 @@ BLOCK_SIZE = 4096
 BLOCK_COUNT = 3072  # 12MB filesystem
 OUTPUT_FILE = "filesystem.bin"
 
+# WiFi credentials - set via environment variables or edit here
+WIFI_SSID = os.environ.get('WIFI_SSID', 'YOUR_WIFI_SSID')
+WIFI_PASS = os.environ.get('WIFI_PASS', 'YOUR_WIFI_PASSWORD')
+
 # Files to include
 FILES = {
-    "init.bat": """Backlog SSID1 miVida2; Password1 m1Curaz#n; Restart 1
+    "init.bat": f"""Backlog SSID1 {WIFI_SSID}; Password1 {WIFI_PASS}; Restart 1
 """,
     "display.ini": """:H,ST7789,135,240,16,SPI,3,10,12,11,8,7,9,-1,40
 :S,2,1,3,0,80,30

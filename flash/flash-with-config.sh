@@ -14,10 +14,10 @@
 # ============================================
 # CONFIGURATION - Edit these values
 # ============================================
-WIFI_SSID="miVida2"
-WIFI_PASS="m1Curaz#n"
-SERIAL_PORT="/dev/ttyUSB0"  # or /dev/ttyACM0, COM3, etc.
-FIRMWARE="../firmware/tasmota32s3-lvgl-15.2.0.factory.bin"
+WIFI_SSID="${WIFI_SSID:-YOUR_WIFI_SSID}"
+WIFI_PASS="${WIFI_PASS:-YOUR_WIFI_PASSWORD}"
+SERIAL_PORT="${SERIAL_PORT:-/dev/ttyUSB0}"  # or /dev/ttyACM0, COM3, etc.
+FIRMWARE="${FIRMWARE:-../firmware/tasmota32s3-lvgl-15.2.0-full.factory.bin}"
 # ============================================
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
