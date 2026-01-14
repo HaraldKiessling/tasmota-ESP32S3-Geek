@@ -6,19 +6,19 @@ Custom build for ESP32-S3 Geek with all features enabled.
 
 ### Download
 
-- **OTA**: `tasmota32s3-lvgl-15.2.0-full.bin` (2.6 MB)
-- **Factory**: `tasmota32s3-lvgl-15.2.0-full.factory.bin` (3.5 MB)
+- **OTA**: `tasmota32s3-lvgl-full.bin` (2.6 MB)
+- **Factory**: `tasmota32s3-lvgl-full.factory.bin` (3.5 MB)
 
 ### Flash
 
 ```bash
 esptool.py --chip esp32s3 --port /dev/ttyUSB0 --baud 921600 \
-  write_flash -z 0x0 tasmota32s3-lvgl-15.2.0-full.factory.bin
+  write_flash -z 0x0 tasmota32s3-lvgl-full.factory.bin
 ```
 
 **Windows:**
 ```powershell
-python -m esptool --chip esp32s3 --port COM7 --baud 921600 write-flash 0x0 tasmota32s3-lvgl-15.2.0-full.factory.bin
+python -m esptool --chip esp32s3 --port COM7 --baud 921600 write-flash 0x0 tasmota32s3-lvgl-full.factory.bin
 ```
 
 ### Configure
@@ -27,7 +27,7 @@ python -m esptool --chip esp32s3 --port COM7 --baud 921600 write-flash 0x0 tasmo
 2. Upload files: `display.ini`, `autoexec.be`, `pages.jsonl`
 3. Apply template (in console):
    ```
-   Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1312,1312,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}
+   Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}
    Module 0
    DisplayRotate 1
    Restart 1

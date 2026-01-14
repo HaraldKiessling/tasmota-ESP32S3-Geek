@@ -41,6 +41,12 @@
 #undef WIFI_SOFT_AP_CHANNEL
 #define WIFI_SOFT_AP_CHANNEL   1
 
+// Pre-configured WiFi (uncomment and set for automated deployment)
+// #undef STA_SSID1
+// #define STA_SSID1              "YOUR_WIFI_SSID"
+// #undef STA_PASS1
+// #define STA_PASS1              "YOUR_WIFI_PASSWORD"
+
 // -- MQTT Configuration --
 #undef MQTT_HOST
 #define MQTT_HOST              ""
@@ -48,11 +54,12 @@
 #undef MQTT_PORT
 #define MQTT_PORT              1883
 
+// MQTT credentials - leave empty for no authentication
 #undef MQTT_USER
-#define MQTT_USER              "DVES_USER"
+#define MQTT_USER              ""
 
 #undef MQTT_PASS
-#define MQTT_PASS              "DVES_PASS"
+#define MQTT_PASS              ""
 
 #undef MQTT_TOPIC
 #define MQTT_TOPIC             PROJECT
@@ -73,7 +80,7 @@
 
 // -- OTA --
 #undef OTA_URL
-#define OTA_URL                "https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/firmware/tasmota32s3-lvgl-15.0.1.bin"
+#define OTA_URL                "https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/firmware/tasmota32s3-lvgl-full.bin"
 
 // -- Logging --
 #undef SERIAL_LOG_LEVEL

@@ -9,7 +9,7 @@ Tools for flashing Tasmota firmware with pre-configured settings.
 ```bash
 # Flash factory firmware
 esptool.py --chip esp32s3 --port /dev/ttyUSB0 --baud 921600 \
-  write_flash -z 0x0 ../firmware/tasmota32s3-lvgl-15.2.0-full.factory.bin
+  write_flash -z 0x0 ../firmware/tasmota32s3-lvgl-full.factory.bin
 
 # Then:
 # 1. Connect to AP 'tasmota-XXXXXX'
@@ -42,7 +42,7 @@ python create-filesystem.py
 # Flash firmware + filesystem together
 esptool.py --chip esp32s3 --port /dev/ttyUSB0 --baud 921600 \
   write_flash \
-  0x0 ../firmware/tasmota32s3-lvgl-15.2.0-full.factory.bin \
+  0x0 ../firmware/tasmota32s3-lvgl-full.factory.bin \
   0x310000 filesystem.bin
 ```
 
@@ -51,7 +51,7 @@ esptool.py --chip esp32s3 --port /dev/ttyUSB0 --baud 921600 \
 $env:WIFI_SSID="your_ssid"
 $env:WIFI_PASS="your_password"
 python create-filesystem.py
-python -m esptool --chip esp32s3 --port COM7 --baud 921600 write-flash 0x0 ..\firmware\tasmota32s3-lvgl-15.2.0-full.factory.bin 0x310000 filesystem.bin
+python -m esptool --chip esp32s3 --port COM7 --baud 921600 write-flash 0x0 ..\firmware\tasmota32s3-lvgl-full.factory.bin 0x310000 filesystem.bin
 ```
 
 ## Files

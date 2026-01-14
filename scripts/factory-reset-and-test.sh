@@ -31,7 +31,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WIFI_SSID="${WIFI_SSID:-}"
 WIFI_PASS="${WIFI_PASS:-}"
 SERIAL_PORT="${SERIAL_PORT:-/dev/ttyUSB0}"
-FIRMWARE="${FIRMWARE:-$SCRIPT_DIR/../firmware/tasmota32s3-lvgl-15.2.0-full.factory.bin}"
+FIRMWARE="${FIRMWARE:-$SCRIPT_DIR/../firmware/tasmota32s3-lvgl-full.factory.bin}"
 DEVICE_IP="${DEVICE_IP:-}"  # Will be discovered or set manually
 
 # Colors
