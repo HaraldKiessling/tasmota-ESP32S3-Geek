@@ -14,7 +14,7 @@ NC='\033[0m' # No Color
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-FIRMWARE_DIR="$PROJECT_ROOT/firmware/release"
+FIRMWARE_DIR="$PROJECT_ROOT/firmware"
 BUILD_VERSION="15.2.0"
 
 echo -e "${GREEN}========================================${NC}"
@@ -29,8 +29,8 @@ if ! command -v esptool.py &> /dev/null; then
 fi
 
 # Check if firmware exists
-FIRMWARE_FILE="$FIRMWARE_DIR/tasmota32s3geek-v${BUILD_VERSION}.bin"
-FACTORY_FILE="$FIRMWARE_DIR/tasmota32s3geek-v${BUILD_VERSION}-factory.bin"
+FIRMWARE_FILE="$FIRMWARE_DIR/tasmota32s3-lvgl-full.bin"
+FACTORY_FILE="$FIRMWARE_DIR/tasmota32s3-lvgl-full.factory.bin"
 
 if [ ! -f "$FIRMWARE_FILE" ] && [ ! -f "$FACTORY_FILE" ]; then
     echo -e "${RED}Error: Firmware not found!${NC}"

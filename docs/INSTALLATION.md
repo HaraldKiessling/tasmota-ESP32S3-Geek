@@ -1,6 +1,6 @@
-# Installation Guide - Tasmota ESP32S3-Geek v7
+# Installation Guide - Tasmota ESP32S3-Geek
 
-Complete step-by-step installation guide for Tasmota ESP32S3-Geek firmware v7.
+Complete step-by-step installation guide for Tasmota ESP32S3-Geek firmware.
 
 ## Prerequisites
 
@@ -44,13 +44,12 @@ mkdir -p tasmota-esp32s3-geek
 cd tasmota-esp32s3-geek
 
 # Download firmware
-wget https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/firmware/release/v7/tasmota32s3-lvgl-full.factory.bin
+wget https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/firmware/tasmota32s3-lvgl-full.factory.bin
 
 # Download configuration files
-wget https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/firmware/release/v7/template.json
-wget https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/firmware/release/v7/display.ini
-wget https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/firmware/release/v7/pages.jsonl
-wget https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/firmware/release/v7/autoexec.be
+wget https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/config/display.ini
+wget https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/config/pages.jsonl
+wget https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/config/autoexec.be
 ```
 
 ## Step 2: Connect Hardware
@@ -209,17 +208,7 @@ curl -F "ufsu=@autoexec.be" \
 3. Paste and execute:
 
 ```
-Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}
-```
-
-4. Execute:
-```
-Module 0
-```
-
-5. Execute:
-```
-Restart 1
+Backlog Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}; Module 0; Restart 1
 ```
 
 ### Via curl
@@ -386,13 +375,13 @@ TelePeriod 60  # Send telemetry every 60 seconds
 
 ### Customize Display
 
-Edit `pages.jsonl` to add more sensors or change layout. See [v7 README](../firmware/README_v15.2.0.md) for details.
+Edit `pages.jsonl` to add more sensors or change layout. See [Firmware README](../firmware/README_v15.2.0.md) for details.
 
 ## Next Steps
 
 - [Hardware Documentation](HARDWARE.md)
-- [Configuration Comparison](CONFIGURATION_COMPARISON.md)
-- [Success Story](TASMOTA-77-SUCCESS.md)
+- [GPIO Pinout](GPIO_PINOUT.md)
+- [DS18x20 Configuration](DS18X20_CONFIGURATION.md)
 - [Tasmota Documentation](https://tasmota.github.io/docs/)
 
 ## Support

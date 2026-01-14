@@ -37,7 +37,8 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-# Template
+# GPIO Template for ESP32S3-Geek
+# GPIO mapping: [Button, -, -, -, -, -, DS18x20-1, -, -, -, -, -, -, DS18x20-2, DS18x20-3, -, I2C_SDA, I2C_SCL, -, -, -, -, SPI_CLK, SPI_MOSI, SPI_DC, SPI_CS, SPI_RST, SPI_BL, -, Neopixel, -, -, UART_TX, UART_RX, -, -, -, -]
 TEMPLATE='{"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}'
 
 echo "========================================"
@@ -82,6 +83,7 @@ VERSION=$(tasmota_cmd "Status 2" | grep -oP '"Version":"[^"]+' | cut -d'"' -f4)
 echo "  Firmware: $VERSION"
 
 # Step 2: Delete old config files
+# UfsDelete <file> - Delete file from flash filesystem
 echo ""
 echo -e "${BLUE}Step 2: Cleaning old configuration${NC}"
 tasmota_cmd "UfsDelete display.ini" >/dev/null
@@ -92,6 +94,8 @@ tasmota_cmd "UfsDelete pages.jsonl" >/dev/null
 echo "  Deleted pages.jsonl"
 
 # Step 3: Reset device (keep WiFi)
+# Reset 4 - Reset to defaults but keep WiFi credentials
+# (Reset 1 = restart, Reset 5 = full factory reset including WiFi)
 echo ""
 echo -e "${BLUE}Step 3: Resetting device (keeping WiFi)${NC}"
 tasmota_cmd "Reset 4" >/dev/null
@@ -134,6 +138,7 @@ fi
 echo ""
 echo -e "${BLUE}Step 5: Applying configuration${NC}"
 
+# Template <json> - Set GPIO pin configuration
 RESULT=$(tasmota_cmd "Template $TEMPLATE")
 if echo "$RESULT" | grep -q "ESP32S3-Geek"; then
     echo -e "  Template: ${GREEN}OK${NC}"
@@ -141,22 +146,28 @@ else
     echo -e "  Template: ${YELLOW}WARNING${NC}"
 fi
 
+# Module 0 - Use template GPIO config (not a predefined module)
 tasmota_cmd "Module 0" >/dev/null
 echo "  Module: 0 (Template)"
 
+# DeviceName <name> - Set device name shown in web UI
 tasmota_cmd "DeviceName ESP32S3-Geek" >/dev/null
 echo "  DeviceName: ESP32S3-Geek"
 
+# Timezone 99 - Auto-detect timezone via geolocation
 tasmota_cmd "Timezone 99" >/dev/null
 echo "  Timezone: 99 (auto)"
 
+# TelePeriod <sec> - Interval for telemetry MQTT messages (60-3600)
 tasmota_cmd "TelePeriod 60" >/dev/null
 echo "  TelePeriod: 60s"
 
+# DisplayRotate <0-3> - Rotate display (0=0°, 1=90°, 2=180°, 3=270°)
 tasmota_cmd "DisplayRotate 1" >/dev/null
 echo "  DisplayRotate: 1"
 
 # Step 6: Restart
+# Restart 1 - Restart device to apply configuration changes
 echo ""
 echo -e "${BLUE}Step 6: Restarting device${NC}"
 tasmota_cmd "Restart 1" >/dev/null

@@ -174,7 +174,7 @@ Parameters:
 
 ## GPIO Configuration in Tasmota
 
-### Template (v7)
+### Template
 
 ```json
 {

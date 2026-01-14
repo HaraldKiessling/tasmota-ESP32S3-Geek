@@ -23,7 +23,7 @@ This guide covers firmware installation and configuration for the Waveshare ESP3
 
 1. **Set OTA URL** in Tasmota Console:
    ```
-   OtaUrl https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/firmware/tasmota32s3-lvgl-15.2.0.bin
+   OtaUrl https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/firmware/tasmota32s3-lvgl-full.bin
    ```
 
 2. **Start Upgrade**:

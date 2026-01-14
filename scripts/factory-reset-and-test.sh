@@ -165,27 +165,36 @@ echo -e "${BLUE}Step 5: Uploading configuration files${NC}"
 "$SCRIPT_DIR/upload-via-berry.sh" "$SCRIPT_DIR/../config/pages.jsonl"
 
 # Step 6: Apply configuration
+# Tasmota commands are sent via HTTP GET to /cm endpoint
 echo ""
 echo -e "${BLUE}Step 6: Applying configuration${NC}"
 
+# GPIO Template for ESP32S3-Geek hardware
+# Maps physical pins to Tasmota functions (sensors, display, I2C, etc.)
 TEMPLATE='{"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}'
 
+# Template <json> - Set GPIO pin configuration for the device
 curl -s --max-time 15 --get --data-urlencode "cmnd=Template $TEMPLATE" "$TASMOTA_URL/cm" >/dev/null
 echo "  Template applied"
 
+# Module 0 - Use template GPIO config instead of predefined module
 curl -s "$TASMOTA_URL/cm?cmnd=Module%200" >/dev/null
 echo "  Module: 0"
 
+# DeviceName <name> - Set device name for web UI and MQTT
 curl -s "$TASMOTA_URL/cm?cmnd=DeviceName%20ESP32S3-Geek" >/dev/null
 echo "  DeviceName: ESP32S3-Geek"
 
+# DisplayRotate 1 - Rotate display 90° for landscape orientation
 curl -s "$TASMOTA_URL/cm?cmnd=DisplayRotate%201" >/dev/null
 echo "  DisplayRotate: 1"
 
+# Timezone 99 - Auto-detect timezone via IP geolocation
 curl -s "$TASMOTA_URL/cm?cmnd=Timezone%2099" >/dev/null
 echo "  Timezone: 99"
 
 # Step 7: Restart
+# Restart 1 - Restart device to apply all configuration changes
 echo ""
 echo -e "${BLUE}Step 7: Restarting device${NC}"
 curl -s "$TASMOTA_URL/cm?cmnd=Restart%201" >/dev/null

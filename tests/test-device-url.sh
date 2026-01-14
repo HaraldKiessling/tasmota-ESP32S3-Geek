@@ -53,7 +53,7 @@ tasmota_cmd() {
 # Parse arguments
 if [ $# -eq 0 ]; then
     echo "Usage: $0 <device_url>"
-    echo "Example: $0 https://tasmota-75.samharald.eu"
+    echo "Example: $0 http://192.168.0.77"
     exit 1
 fi
 

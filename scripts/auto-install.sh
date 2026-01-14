@@ -27,7 +27,10 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-# Template for ESP32-S3 Geek
+# GPIO Template for ESP32S3-Geek hardware
+# Maps physical GPIO pins to Tasmota functions:
+#   32=Button, 1312-1314=DS18x20 buses, 640/608=I2C SDA/SCL,
+#   8800-8960=SPI Display, 6210=Neopixel, 3200/3232=UART TX/RX
 TEMPLATE='{"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}'
 
 echo "========================================"
@@ -37,7 +40,9 @@ echo "Target: $TASMOTA_URL"
 echo "Date: $(date)"
 echo "----------------------------------------"
 
-# Helper: Execute Tasmota command
+# Helper: Execute Tasmota command via HTTP API
+# Tasmota exposes /cm endpoint for command execution
+# Commands return JSON response with result
 tasmota_cmd() {
     local cmd="$1"
     curl -s --max-time 15 --get --data-urlencode "cmnd=$cmd" "$TASMOTA_URL/cm" 2>/dev/null
@@ -154,6 +159,7 @@ if [ "$UPLOAD_SUCCESS" = false ]; then
 fi
 
 # Step 3: Apply Template
+# Template <json> - Configure GPIO pin assignments for the hardware
 echo ""
 echo "Step 3: Applying GPIO Template..."
 RESULT=$(tasmota_cmd "Template $TEMPLATE")
@@ -164,7 +170,7 @@ else
     echo "  Response: $RESULT"
 fi
 
-# Set Module to 0 (use template)
+# Module 0 - Use template GPIO config instead of predefined module
 tasmota_cmd "Module 0" >/dev/null
 echo "  Module set to 0 (Template)"
 
@@ -172,22 +178,28 @@ echo "  Module set to 0 (Template)"
 echo ""
 echo "Step 4: Configuring device settings..."
 
+# DeviceName <name> - Device name shown in web UI header
 tasmota_cmd "DeviceName ESP32S3-Geek" >/dev/null
 echo "  DeviceName: ESP32S3-Geek"
 
+# FriendlyName <name> - Name used in MQTT topics and Home Assistant
 tasmota_cmd "FriendlyName ESP32S3-Geek" >/dev/null
 echo "  FriendlyName: ESP32S3-Geek"
 
+# Timezone 99 - Auto-detect timezone via IP geolocation
 tasmota_cmd "Timezone 99" >/dev/null
 echo "  Timezone: 99 (auto)"
 
+# TelePeriod <sec> - Interval for MQTT telemetry messages (60-3600s)
 tasmota_cmd "TelePeriod 60" >/dev/null
 echo "  TelePeriod: 60s"
 
+# DisplayRotate <0-3> - Rotate display (0=0°, 1=90°, 2=180°, 3=270°)
 tasmota_cmd "DisplayRotate 1" >/dev/null
 echo "  DisplayRotate: 1"
 
 # Step 5: Restart to apply all settings
+# Restart 1 - Restart device (required after Template/Module changes)
 echo ""
 echo "Step 5: Restarting device..."
 tasmota_cmd "Restart 1" >/dev/null
@@ -199,7 +211,7 @@ echo ""
 echo "Step 6: Verifying installation..."
 sleep 10  # Give Berry/LVGL time to initialize
 
-# Check Berry
+# Status 0 - Full device status including Berry runtime info
 BERRY_STATUS=$(tasmota_cmd "Status 0" | grep -oP '"Berry":\{[^}]+\}')
 if [ -n "$BERRY_STATUS" ]; then
     HEAP=$(echo "$BERRY_STATUS" | grep -oP '"HeapUsed":[0-9]+' | cut -d':' -f2)
@@ -209,7 +221,7 @@ else
     echo -e "  Berry: ${RED}NOT RUNNING${NC}"
 fi
 
-# Check Display
+# DisplayModel - Show current display driver (17 = Universal Display for ST7789)
 DISPLAY_MODEL=$(tasmota_cmd "DisplayModel" | grep -oP '"DisplayModel":[0-9]+' | cut -d':' -f2)
 if [ "$DISPLAY_MODEL" = "17" ]; then
     echo -e "  Display: ${GREEN}OK${NC} (Model 17 - Universal Display)"
@@ -217,7 +229,7 @@ else
     echo -e "  Display: ${YELLOW}Model $DISPLAY_MODEL${NC}"
 fi
 
-# Check sensors
+# Status 10 - Sensor readings (DS18B20 temperatures, BME280, etc.)
 SENSORS=$(tasmota_cmd "Status 10")
 DS_COUNT=$(echo "$SENSORS" | grep -oP '"DS18B20[^"]*"' | wc -l)
 echo "  DS18B20 Sensors: $DS_COUNT found"

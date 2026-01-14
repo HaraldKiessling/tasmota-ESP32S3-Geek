@@ -48,11 +48,24 @@ test_result() {
     fi
 }
 
-# Helper: Execute Tasmota command
+# Helper: Execute Tasmota command via HTTP API
+# Usage: tasmota_cmd "Status 0"
+# The /cm endpoint accepts commands via GET parameter 'cmnd'
 tasmota_cmd() {
     local cmd="$1"
     curl -s --max-time 10 --get --data-urlencode "cmnd=$cmd" "$TASMOTA_URL/cm" 2>/dev/null
 }
+
+# Tasmota Commands Reference:
+# ---------------------------
+# Status 0      - Full device status (network, firmware, sensors, Berry)
+# Status 2      - Firmware version info
+# Status 10     - Sensor readings (temperature, humidity, etc.)
+# Status 11     - WiFi status (SSID, signal strength, IP)
+# Time          - Current device time (NTP synced)
+# Template      - Show/set GPIO pin configuration
+# DisplayModel  - Show/set display driver (17 = Universal Display)
+# br <code>     - Execute Berry script code
 
 # Helper: Check if device is reachable
 check_device() {
