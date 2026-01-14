@@ -17,7 +17,7 @@
 WIFI_SSID="${WIFI_SSID:-YOUR_WIFI_SSID}"
 WIFI_PASS="${WIFI_PASS:-YOUR_WIFI_PASSWORD}"
 SERIAL_PORT="${SERIAL_PORT:-/dev/ttyUSB0}"  # or /dev/ttyACM0, COM3, etc.
-FIRMWARE="${FIRMWARE:-../firmware/tasmota32s3-lvgl-15.2.0-full.factory.bin}"
+FIRMWARE="${FIRMWARE:-../firmware/tasmota32s3-lvgl-full.factory.bin}"
 # ============================================
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
