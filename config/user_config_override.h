@@ -134,7 +134,7 @@
 #define USE_DISCOVERY                            // Discovery support
 #define USE_TIMERS                               // Timers
 #define USE_RULES                                // Rules engine
-#define USE_SCRIPT                               // Scripting support
+// Note: USE_SCRIPT cannot be used together with USE_RULES
 
 // -- Disable unused features to save space --
 #undef USE_DOMOTICZ
