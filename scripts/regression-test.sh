@@ -271,7 +271,7 @@ else
     test_result "pages.jsonl" "FAIL" "File missing"
 fi
 
-# Test 16: Template
+# Test 16: Template and GPIO
 echo ""
 echo "=== Configuration Tests ==="
 TEMPLATE=$(tasmota_cmd "Template")
@@ -282,19 +282,25 @@ else
     test_result "Template Name" "WARN" "Name is: $NAME"
 fi
 
-# Check GPIO configuration - DS18x20 buses use 1312, 1313, 1314
-if echo "$TEMPLATE" | grep -q "1312" && echo "$TEMPLATE" | grep -q "1313" && echo "$TEMPLATE" | grep -q "1314"; then
-    test_result "DS18x20 GPIO Config" "PASS" "All 3 buses configured (1312, 1313, 1314)"
-elif echo "$TEMPLATE" | grep -q "1312"; then
-    test_result "DS18x20 GPIO Config" "WARN" "Only DS18x20-1 (1312) configured"
+# Check GPIO configuration via gpio command (sensors configured separately from template)
+GPIO_CONFIG=$(tasmota_cmd "GPIO")
+
+# Check DS18x20 GPIOs
+if echo "$GPIO_CONFIG" | grep -q "DS18x201" && echo "$GPIO_CONFIG" | grep -q "DS18x202" && echo "$GPIO_CONFIG" | grep -q "DS18x203"; then
+    test_result "DS18x20 GPIO Config" "PASS" "All 3 buses configured"
+elif echo "$GPIO_CONFIG" | grep -q "DS18x20"; then
+    test_result "DS18x20 GPIO Config" "WARN" "Some DS18x20 buses configured"
 else
-    test_result "DS18x20 GPIO Config" "WARN" "DS18x20 not in template"
+    test_result "DS18x20 GPIO Config" "WARN" "DS18x20 not configured (use: Backlog gpio6 1312; gpio13 1313; gpio14 1314)"
 fi
 
-if echo "$TEMPLATE" | grep -q "640"; then
-    test_result "I2C SDA GPIO Config" "PASS"
+# Check I2C GPIOs
+if echo "$GPIO_CONFIG" | grep -q "I2C SDA" && echo "$GPIO_CONFIG" | grep -q "I2C SCL"; then
+    test_result "I2C GPIO Config" "PASS" "SDA and SCL configured"
+elif echo "$GPIO_CONFIG" | grep -q "I2C"; then
+    test_result "I2C GPIO Config" "WARN" "Partial I2C config"
 else
-    test_result "I2C SDA GPIO Config" "WARN" "I2C SDA (640) not in template"
+    test_result "I2C GPIO Config" "WARN" "I2C not configured (use: Backlog gpio16 640; gpio17 608)"
 fi
 
 # Summary

@@ -28,12 +28,12 @@ YELLOW='\033[1;33m'
 NC='\033[0m'
 
 # GPIO Template for ESP32S3-Geek hardware
-# Maps physical GPIO pins to Tasmota functions:
-#   32=Button, 1312-1314=DS18x20 buses (GPIO 6,13,14), 640/608=I2C SDA/SCL (GPIO 16,17)
-#   8896/8960/8800/8832/8864/8928=SPI Display (GPIO 22-27), 6210=Neopixel (GPIO 29)
-#   3200/3232=UART TX/RX (GPIO 32,33)
-# Display GPIOs (22-27) require explicit SPI codes for ST7789 to work
-TEMPLATE='{"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}'
+# Base template with display GPIOs (22-27) - sensors configured via gpio command
+# Display GPIOs require explicit SPI codes (8896,8960,8800,8832,8864,8928) for ST7789
+TEMPLATE='{"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}'
+
+# Sensor GPIO configuration (applied after template)
+SENSOR_GPIO="gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608"
 
 echo "========================================"
 echo "Tasmota ESP32-S3 Geek Auto-Install"
@@ -162,6 +162,7 @@ fi
 
 # Step 3: Apply Template
 # Template <json> - Configure GPIO pin assignments for the hardware
+# Base template has display GPIOs, sensors configured separately
 echo ""
 echo "Step 3: Applying GPIO Template..."
 RESULT=$(tasmota_cmd "Template $TEMPLATE")
@@ -172,9 +173,23 @@ else
     echo "  Response: $RESULT"
 fi
 
-# Module 0 - Use template GPIO config instead of predefined module
-tasmota_cmd "Module 0" >/dev/null
-echo "  Module set to 0 (Template)"
+# Wait for template restart
+echo "  Waiting for restart..."
+sleep 10
+wait_for_device 60
+
+# Configure sensor GPIOs
+# gpio6 1312 = DS18x20-1, gpio13 1313 = DS18x20-2, gpio14 1314 = DS18x20-3
+# gpio16 640 = I2C SDA, gpio17 608 = I2C SCL
+echo ""
+echo "Step 3b: Configuring sensor GPIOs..."
+tasmota_cmd "Backlog $SENSOR_GPIO" >/dev/null
+echo "  Sensor GPIOs configured"
+
+# Wait for gpio restart
+echo "  Waiting for restart..."
+sleep 10
+wait_for_device 60
 
 # Step 4: Configure device settings (before restart)
 echo ""

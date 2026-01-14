@@ -190,23 +190,45 @@ Required files:
 
 ---
 
-## GPIO Template
+## GPIO Configuration
 
-The scripts apply this GPIO template:
+The scripts apply a base template and then configure sensors via GPIO commands:
+
+### Base Template
 
 ```json
 {
   "NAME": "ESP32S3-Geek",
-  "GPIO": [32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],
+  "GPIO": [32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],
   "FLAG": 0,
   "BASE": 1
 }
 ```
 
+The base template sets display GPIOs (22-27) and uses `1` (User) for sensor GPIOs.
+
+### Sensor Configuration
+
+After applying the template, sensors are configured via:
+
+```
+# DS18x20 temperature sensors
+Backlog gpio6 1312; gpio13 1313; gpio14 1314
+
+# BME280 I2C sensors
+Backlog gpio16 640; gpio17 608
+
+# Both sensor types
+Backlog gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608
+```
+
 Key GPIO assignments:
-- GPIO 6, 13, 14: DS18x20 temperature sensors (code 1312)
+- GPIO 6: DS18x20-1 (code 1312)
+- GPIO 13: DS18x20-2 (code 1313)
+- GPIO 14: DS18x20-3 (code 1314)
 - GPIO 16: I2C SDA (code 640)
 - GPIO 17: I2C SCL (code 608)
+- GPIO 22-27: SPI Display (codes 8896, 8960, 8800, 8832, 8864, 8928)
 
 ---
 

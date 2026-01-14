@@ -300,30 +300,30 @@ Power Configuration
     0,     // GPIO 3:  None
     0,     // GPIO 4:  None
     0,     // GPIO 5:  None
-    1,     // GPIO 6:  DS18x20 (Sensor #1)
-    0,     // GPIO 7:  None (Display RST - auto)
-    0,     // GPIO 8:  None (Display SCLK - auto)
-    0,     // GPIO 9:  None (Display BL - auto)
-    0,     // GPIO 10: None (Display CS - auto)
-    0,     // GPIO 11: None (Display MOSI - auto)
-    0,     // GPIO 12: None (Display DC - auto)
-    1,     // GPIO 13: DS18x20 (Sensor #2)
-    1,     // GPIO 14: DS18x20 (Sensor #3)
+    1,     // GPIO 6:  User (DS18x20 via gpio command)
+    0,     // GPIO 7:  None
+    0,     // GPIO 8:  None
+    0,     // GPIO 9:  None
+    0,     // GPIO 10: None
+    0,     // GPIO 11: None
+    0,     // GPIO 12: None
+    1,     // GPIO 13: User (DS18x20 via gpio command)
+    1,     // GPIO 14: User (DS18x20 via gpio command)
     0,     // GPIO 15: None
-    640,   // GPIO 16: I2C SDA
-    608,   // GPIO 17: I2C SCL
+    1,     // GPIO 16: User (I2C SDA via gpio command)
+    1,     // GPIO 17: User (I2C SCL via gpio command)
     0,     // GPIO 18: None
     0,     // GPIO 19: None (USB D-)
     0,     // GPIO 20: None (USB D+)
     0,     // GPIO 21: None
-    8896,  // GPIO 22: SPI CLK (Display)
-    8960,  // GPIO 23: SPI MOSI (Display)
-    8800,  // GPIO 24: SPI DC (Display)
-    8832,  // GPIO 25: SPI CS (Display)
-    8864,  // GPIO 26: SPI RST (Display)
-    8928,  // GPIO 27: SPI Backlight (Display)
+    8896,  // GPIO 22: SPI CLK (Display) - required
+    8960,  // GPIO 23: SPI MOSI (Display) - required
+    8800,  // GPIO 24: SPI DC (Display) - required
+    8832,  // GPIO 25: SPI CS (Display) - required
+    8864,  // GPIO 26: SPI RST (Display) - required
+    8928,  // GPIO 27: SPI Backlight (Display) - required
     0,     // GPIO 28: None
-    6210,  // GPIO 29: TuyaSend
+    6210,  // GPIO 29: Neopixel
     0,     // GPIO 30: None
     0,     // GPIO 31: None
     3200,  // GPIO 32: Output Hi
@@ -338,10 +338,23 @@ Power Configuration
 }
 ```
 
-### Console Command
+### Console Commands
 
+**Apply base template** (sets display GPIOs):
 ```
-Backlog Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}; Module 0; Restart 1
+Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}
+```
+
+**Configure sensors** (after template restart):
+```
+# DS18x20 only
+Backlog gpio6 1312; gpio13 1313; gpio14 1314
+
+# BME280 I2C only
+Backlog gpio16 640; gpio17 608
+
+# Both sensor types
+Backlog gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608
 ```
 
 ### GPIO Function Codes

@@ -7,21 +7,32 @@
 
 ## Quick Setup
 
-### Console Command
+### Console Commands
 
-Copy and paste this command into the Tasmota console:
-
+**Step 1: Apply base template** (sets display GPIOs):
 ```
-Backlog Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}; Module 0; Restart 1
+Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}
 ```
 
-**Wait 30 seconds for restart**
+**Step 2: Configure sensors** (after restart):
+```
+# DS18x20 temperature sensors only
+Backlog gpio6 1312; gpio13 1313; gpio14 1314
+
+# BME280 I2C sensors only
+Backlog gpio16 640; gpio17 608
+
+# Both sensor types
+Backlog gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608
+```
 
 ---
 
 ## Template Breakdown
 
 ### GPIO Configuration
+
+The base template uses `1` (User) for sensor GPIOs, allowing flexible configuration via `gpio` command:
 
 ```json
 {
@@ -33,28 +44,28 @@ Backlog Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,13
     0,     // GPIO 3:  None
     0,     // GPIO 4:  None
     0,     // GPIO 5:  None
-    1312,  // GPIO 6:  DS18x20-1 ← Temperature Sensor Bus 1
-    0,     // GPIO 7:  None (Display RST - auto)
-    0,     // GPIO 8:  None (Display SCLK - auto)
-    0,     // GPIO 9:  None (Display BL - auto)
-    0,     // GPIO 10: None (Display CS - auto)
-    0,     // GPIO 11: None (Display MOSI - auto)
-    0,     // GPIO 12: None (Display DC - auto)
-    1313,  // GPIO 13: DS18x20-2 ← Temperature Sensor Bus 2
-    1314,  // GPIO 14: DS18x20-3 ← Temperature Sensor Bus 3
+    1,     // GPIO 6:  User ← configure via: gpio6 1312
+    0,     // GPIO 7:  None
+    0,     // GPIO 8:  None
+    0,     // GPIO 9:  None
+    0,     // GPIO 10: None
+    0,     // GPIO 11: None
+    0,     // GPIO 12: None
+    1,     // GPIO 13: User ← configure via: gpio13 1313
+    1,     // GPIO 14: User ← configure via: gpio14 1314
     0,     // GPIO 15: None
-    640,   // GPIO 16: I2C SDA ← BME280, etc.
-    608,   // GPIO 17: I2C SCL ← BME280, etc.
+    1,     // GPIO 16: User ← configure via: gpio16 640
+    1,     // GPIO 17: User ← configure via: gpio17 608
     0,     // GPIO 18: None
     0,     // GPIO 19: None (USB D-)
     0,     // GPIO 20: None (USB D+)
     0,     // GPIO 21: None
-    8896,  // GPIO 22: SPI CLK (Display)
-    8960,  // GPIO 23: SPI MOSI (Display)
-    8800,  // GPIO 24: SPI DC (Display)
-    8832,  // GPIO 25: SPI CS (Display)
-    8864,  // GPIO 26: SPI RST (Display)
-    8928,  // GPIO 27: SPI Backlight (Display)
+    8896,  // GPIO 22: SPI CLK (Display) - required
+    8960,  // GPIO 23: SPI MOSI (Display) - required
+    8800,  // GPIO 24: SPI DC (Display) - required
+    8832,  // GPIO 25: SPI CS (Display) - required
+    8864,  // GPIO 26: SPI RST (Display) - required
+    8928,  // GPIO 27: SPI Backlight (Display) - required
     0,     // GPIO 28: None
     6210,  // GPIO 29: Neopixel
     0,     // GPIO 30: None
@@ -291,41 +302,31 @@ Power1 Toggle  # Toggle
 
 ---
 
-## Template Variants
+## Sensor Configuration
 
-### Minimal (Display Only)
+The base template uses `1` (User) for sensor GPIOs. Configure sensors with `gpio` commands:
 
-```
-Backlog Template {"NAME":"ESP32S3-Geek-Min","GPIO":[32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"FLAG":0,"BASE":1}; Module 0; Restart 1
-```
-
-**Features**:
-- Display only
-- No sensors
-- Minimal configuration
-
-### With I2C Only
+### DS18x20 Temperature Sensors
 
 ```
-Backlog Template {"NAME":"ESP32S3-Geek-I2C","GPIO":[32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,640,608,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"FLAG":0,"BASE":1}; Module 0; Restart 1
+Backlog gpio6 1312; gpio13 1313; gpio14 1314
 ```
 
-**Features**:
-- Display
-- I2C sensors (BME280, etc.)
-- No DS18B20
-
-### Full Configuration (Current)
+### BME280 I2C Sensors
 
 ```
-Backlog Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}; Module 0; Restart 1
+Backlog gpio16 640; gpio17 608
 ```
 
-**Features**:
-- Display
-- 3x DS18B20 sensors (separate buses: 1312, 1313, 1314)
-- I2C sensors
-- User-defined options
+### Both Sensor Types
+
+```
+Backlog gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608
+```
+
+### No Sensors (Display Only)
+
+No additional configuration needed - base template works without sensors.
 
 ---
 
@@ -334,12 +335,12 @@ Backlog Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,13
 ### Template Not Applied
 
 **Symptoms**:
-- GPIO command shows wrong configuration
-- Sensors not detected
+- Display not working
+- DisplayModel shows 0
 
 **Solution**:
 ```
-Backlog Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}; Module 0; Restart 1
+Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}
 ```
 
 ### Sensors Not Detected
@@ -349,12 +350,14 @@ Backlog Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,13
 # Check GPIO configuration
 GPIO
 
-# Should show:
-# GPIO 6:  DS18x20
-# GPIO 13: DS18x20
-# GPIO 14: DS18x20
+# If DS18x20 not shown, configure:
+Backlog gpio6 1312; gpio13 1313; gpio14 1314
+```
 
-# If not, reapply template
+**BME280**:
+```
+# If I2C not shown, configure:
+Backlog gpio16 640; gpio17 608
 ```
 
 **I2C**:

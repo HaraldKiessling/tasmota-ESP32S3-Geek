@@ -169,35 +169,57 @@ echo -e "${BLUE}Step 5: Uploading configuration files${NC}"
 echo ""
 echo -e "${BLUE}Step 6: Applying configuration${NC}"
 
-# GPIO Template for ESP32S3-Geek hardware
-# Display GPIOs (22-27) require explicit SPI codes (8896,8960,8800,8832,8864,8928) for ST7789
-TEMPLATE='{"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}'
+# GPIO Template for ESP32S3-Geek hardware (base template with display)
+# Display GPIOs (22-27) require explicit SPI codes for ST7789
+TEMPLATE='{"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}'
 
 # Template <json> - Set GPIO pin configuration for the device
 curl -s --max-time 15 --get --data-urlencode "cmnd=Template $TEMPLATE" "$TASMOTA_URL/cm" >/dev/null
 echo "  Template applied"
 
-# Module 0 - Use template GPIO config instead of predefined module
-curl -s "$TASMOTA_URL/cm?cmnd=Module%200" >/dev/null
-echo "  Module: 0"
+# Wait for template restart
+echo -n "  Waiting for restart..."
+sleep 10
+COUNT=0
+while [ $COUNT -lt 60 ]; do
+    if curl -s --max-time 3 "$TASMOTA_URL/" >/dev/null 2>&1; then
+        echo -e " ${GREEN}OK${NC}"
+        break
+    fi
+    sleep 2
+    COUNT=$((COUNT + 2))
+    echo -n "."
+done
+
+# Configure sensor GPIOs
+curl -s --max-time 15 --get --data-urlencode "cmnd=Backlog gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608" "$TASMOTA_URL/cm" >/dev/null
+echo "  Sensor GPIOs configured"
+
+# Wait for gpio restart
+echo -n "  Waiting for restart..."
+sleep 10
+COUNT=0
+while [ $COUNT -lt 60 ]; do
+    if curl -s --max-time 3 "$TASMOTA_URL/" >/dev/null 2>&1; then
+        echo -e " ${GREEN}OK${NC}"
+        break
+    fi
+    sleep 2
+    COUNT=$((COUNT + 2))
+    echo -n "."
+done
 
 # DeviceName <name> - Set device name for web UI and MQTT
 curl -s "$TASMOTA_URL/cm?cmnd=DeviceName%20ESP32S3-Geek" >/dev/null
 echo "  DeviceName: ESP32S3-Geek"
 
-# DisplayRotate 1 - Rotate display 90° for landscape orientation
-curl -s "$TASMOTA_URL/cm?cmnd=DisplayRotate%201" >/dev/null
-echo "  DisplayRotate: 1"
-
 # Timezone 99 - Auto-detect timezone via IP geolocation
 curl -s "$TASMOTA_URL/cm?cmnd=Timezone%2099" >/dev/null
 echo "  Timezone: 99"
 
-# Step 7: Restart
-# Restart 1 - Restart device to apply all configuration changes
+# Step 7: Final verification (no restart needed - gpio already restarted)
 echo ""
-echo -e "${BLUE}Step 7: Restarting device${NC}"
-curl -s "$TASMOTA_URL/cm?cmnd=Restart%201" >/dev/null
+echo -e "${BLUE}Step 7: Verifying configuration${NC}"
 
 echo -n "  Waiting for restart..."
 sleep 5

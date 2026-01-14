@@ -126,17 +126,22 @@ GND -----------> |GND|-------> |GND|-------> |GND|
 
 ### GPIO Template
 
-**Console Command**:
+**Apply base template** (sets display GPIOs):
 ```
-Backlog Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}; Module 0; Restart 1
+Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}
+```
+
+**Configure DS18x20 sensors** (after template restart):
+```
+Backlog gpio6 1312; gpio13 1313; gpio14 1314
 ```
 
 **GPIO Values for DS18x20**:
-| GPIO | Position | Value | Function |
-|------|----------|-------|----------|
-| 6    | [6]      | 1312  | DS18x20-1 (Bus 1) |
-| 13   | [13]     | 1313  | DS18x20-2 (Bus 2) |
-| 14   | [14]     | 1314  | DS18x20-3 (Bus 3) |
+| GPIO | Value | Function |
+|------|-------|----------|
+| 6    | 1312  | DS18x20-1 (Bus 1) |
+| 13   | 1313  | DS18x20-2 (Bus 2) |
+| 14   | 1314  | DS18x20-3 (Bus 3) |
 
 Values 1312-1314 represent DS18x20 buses 1-3 in Tasmota's GPIO numbering scheme.
 

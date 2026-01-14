@@ -205,10 +205,23 @@ curl -F "ufsu=@autoexec.be" \
 
 1. Open http://tasmota-77.local
 2. Go to: **Console**
-3. Paste and execute:
+3. Apply template:
 
 ```
-Backlog Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}; Module 0; Restart 1
+Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}
+```
+
+4. Configure sensors (after restart):
+
+```
+# DS18x20 temperature sensors
+Backlog gpio6 1312; gpio13 1313; gpio14 1314
+
+# BME280 I2C sensors
+Backlog gpio16 640; gpio17 608
+
+# Both sensor types
+Backlog gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608
 ```
 
 ### Via curl
@@ -217,14 +230,12 @@ Backlog Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,13
 DEVICE="tasmota-77.local"
 
 # Apply template
-curl -s "http://${DEVICE}/cm" \
-  -d "cmnd=Template $(cat template.json)"
+curl -s "http://${DEVICE}/cm" --data-urlencode \
+  'cmnd=Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}'
 
-# Activate module
-curl -s "http://${DEVICE}/cm?cmnd=Module%200"
-
-# Restart
-curl -s "http://${DEVICE}/cm?cmnd=Restart%201"
+# Configure sensors (after restart)
+curl -s "http://${DEVICE}/cm" --data-urlencode \
+  'cmnd=Backlog gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608'
 ```
 
 ## Step 7: Verify Installation
@@ -267,15 +278,15 @@ curl -s "http://tasmota-77.local/cm?cmnd=DisplayModel" | jq .
 ### Check GPIO Configuration
 
 ```bash
-curl -s "http://tasmota-77.local/cm?cmnd=Template" | jq .
+curl -s "http://tasmota-77.local/cm?cmnd=gpio" | jq .
 ```
 
-Verify:
-- GPIO 6: 1312 (DS18x20-1)
-- GPIO 13: 1313 (DS18x20-2)
-- GPIO 14: 1314 (DS18x20-3)
-- GPIO 16: 640 (I2C SDA)
-- GPIO 17: 608 (I2C SCL)
+Verify (if sensors configured):
+- GPIO 6: DS18x20-1 (1312)
+- GPIO 13: DS18x20-2 (1313)
+- GPIO 14: DS18x20-3 (1314)
+- GPIO 16: I2C SDA (640)
+- GPIO 17: I2C SCL (608)
 
 ## Troubleshooting
 

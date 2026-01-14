@@ -37,9 +37,12 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-# GPIO Template for ESP32S3-Geek
-# GPIO mapping: [Button, -, -, -, -, -, DS18x20-1, -, -, -, -, -, -, DS18x20-2, DS18x20-3, -, I2C_SDA, I2C_SCL, -, -, -, -, SPI_CLK, SPI_MOSI, SPI_DC, SPI_CS, SPI_RST, SPI_BL, -, Neopixel, -, -, UART_TX, UART_RX, -, -, -, -]
-TEMPLATE='{"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}'
+# GPIO Template for ESP32S3-Geek (base template with display GPIOs)
+# Sensor GPIOs (6,13,14,16,17) use value 1 (User) - configured via gpio command
+TEMPLATE='{"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}'
+
+# Sensor GPIO configuration
+SENSOR_GPIO="gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608"
 
 echo "========================================"
 echo -e "${BLUE}Full Regression Test${NC}"
@@ -138,7 +141,7 @@ fi
 echo ""
 echo -e "${BLUE}Step 5: Applying configuration${NC}"
 
-# Template <json> - Set GPIO pin configuration
+# Template <json> - Set GPIO pin configuration (base template with display)
 RESULT=$(tasmota_cmd "Template $TEMPLATE")
 if echo "$RESULT" | grep -q "ESP32S3-Geek"; then
     echo -e "  Template: ${GREEN}OK${NC}"
@@ -146,9 +149,19 @@ else
     echo -e "  Template: ${YELLOW}WARNING${NC}"
 fi
 
-# Module 0 - Use template GPIO config (not a predefined module)
-tasmota_cmd "Module 0" >/dev/null
-echo "  Module: 0 (Template)"
+# Wait for template restart
+echo "  Waiting for restart..."
+sleep 10
+wait_for_device 60
+
+# Configure sensor GPIOs
+tasmota_cmd "Backlog $SENSOR_GPIO" >/dev/null
+echo "  Sensor GPIOs: configured"
+
+# Wait for gpio restart
+echo "  Waiting for restart..."
+sleep 10
+wait_for_device 60
 
 # DeviceName <name> - Set device name shown in web UI
 tasmota_cmd "DeviceName ESP32S3-Geek" >/dev/null
@@ -162,14 +175,9 @@ echo "  Timezone: 99 (auto)"
 tasmota_cmd "TelePeriod 60" >/dev/null
 echo "  TelePeriod: 60s"
 
-# DisplayRotate <0-3> - Rotate display (0=0°, 1=90°, 2=180°, 3=270°)
-tasmota_cmd "DisplayRotate 1" >/dev/null
-echo "  DisplayRotate: 1"
-
-# Step 6: Restart
-# Restart 1 - Restart device to apply configuration changes
+# Step 6: Final restart
 echo ""
-echo -e "${BLUE}Step 6: Restarting device${NC}"
+echo -e "${BLUE}Step 6: Final restart${NC}"
 tasmota_cmd "Restart 1" >/dev/null
 sleep 5
 wait_for_device 90
