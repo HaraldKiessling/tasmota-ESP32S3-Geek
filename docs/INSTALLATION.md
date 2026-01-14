@@ -35,7 +35,7 @@ pip install esptool
 ### Option A: Clone Repository (Recommended)
 ```bash
 git clone https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek.git
-cd tasmota-ESP32S3-Geek/firmware/release/v7
+cd tasmota-ESP32S3-Geek/firmware
 ```
 
 ### Option B: Direct Download
@@ -44,7 +44,7 @@ mkdir -p tasmota-esp32s3-geek
 cd tasmota-esp32s3-geek
 
 # Download firmware
-wget https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/firmware/release/v7/tasmota32s3geek-v15.0.1-v7-factory.bin
+wget https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/firmware/release/v7/tasmota32s3-lvgl-full.factory.bin
 
 # Download configuration files
 wget https://github.com/HaraldKiessling/tasmota-ESP32S3-Geek/raw/main/firmware/release/v7/template.json
@@ -98,7 +98,7 @@ esptool.py --chip esp32s3 \
   --flash_mode dio \
   --flash_freq 80m \
   --flash_size detect \
-  0x0 tasmota32s3geek-v15.0.1-v7-factory.bin
+  0x0 tasmota32s3-lvgl-full.factory.bin
 ```
 
 **Windows:**
@@ -112,7 +112,7 @@ esptool.py --chip esp32s3 ^
   --flash_mode dio ^
   --flash_freq 80m ^
   --flash_size detect ^
-  0x0 tasmota32s3geek-v15.0.1-v7-factory.bin
+  0x0 tasmota32s3-lvgl-full.factory.bin
 ```
 
 **Expected Output:**
@@ -136,7 +136,7 @@ If you already have Tasmota installed:
 http://tasmota-77.local/up
 
 # Or via curl
-curl -F "u2=@tasmota32s3geek-v15.0.1-v7.bin" \
+curl -F "u2=@tasmota32s3-lvgl-full.bin" \
   http://tasmota-77.local/up
 ```
 
@@ -386,7 +386,7 @@ TelePeriod 60  # Send telemetry every 60 seconds
 
 ### Customize Display
 
-Edit `pages.jsonl` to add more sensors or change layout. See [v7 README](../firmware/release/v7/README.md) for details.
+Edit `pages.jsonl` to add more sensors or change layout. See [v7 README](../firmware/README_v15.2.0.md) for details.
 
 ## Next Steps
 

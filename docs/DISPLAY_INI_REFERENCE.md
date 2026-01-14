@@ -600,7 +600,7 @@ Dimmer 100
 
 ## Version Differences
 
-### v15.0.1 vs v15.2.0
+### Version History
 
 **v15.0.1**:
 - More tolerant of errors

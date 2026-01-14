@@ -72,7 +72,7 @@ firmware/
 
 ```bash
 cd /workspaces/tasmota-ESP32S3-Geek
-git clone --depth 1 --branch v15.0.1 https://github.com/arendst/Tasmota.git
+git clone --depth 1 --branch v15.2.0 https://github.com/arendst/Tasmota.git
 cd Tasmota
 ```
 
@@ -274,7 +274,7 @@ source .venv/bin/activate
 
 **Solution**: Clone Tasmota repository
 ```bash
-git clone --depth 1 --branch v15.0.1 https://github.com/arendst/Tasmota.git
+git clone --depth 1 --branch v15.2.0 https://github.com/arendst/Tasmota.git
 ```
 
 #### Error: "board 'esp32s3-qio_qspi' is unknown"
@@ -432,5 +432,5 @@ GPL-3.0 (same as Tasmota)
 ---
 
 **Last Updated**: 2026-01-12  
-**Tasmota Version**: 15.0.1  
+**Tasmota Version**: 15.2.0  
 **Author**: Harald Kiessling

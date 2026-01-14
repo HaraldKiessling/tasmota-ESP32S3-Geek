@@ -488,4 +488,4 @@ I2CDriver
 
 **Last Updated**: 2026-01-12  
 **Board**: Waveshare ESP32-S3 Geek  
-**Tasmota**: 15.0.1 / 15.2.0
+**Tasmota**: 15.2.0
