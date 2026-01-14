@@ -199,7 +199,7 @@ The scripts apply a base template and then configure sensors via GPIO commands:
 ```json
 {
   "NAME": "ESP32S3-Geek",
-  "GPIO": [32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],
+  "GPIO": [32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,1,1,0,0,0,0],
   "FLAG": 0,
   "BASE": 1
 }
@@ -207,9 +207,9 @@ The scripts apply a base template and then configure sensors via GPIO commands:
 
 The base template sets display GPIOs (22-27) and uses `1` (User) for sensor GPIOs.
 
-### Sensor Configuration
+### Peripheral Configuration
 
-After applying the template, sensors are configured via:
+After applying the template, peripherals are configured via:
 
 ```
 # DS18x20 temperature sensors
@@ -218,8 +218,11 @@ Backlog gpio6 1312; gpio13 1313; gpio14 1314
 # BME280 I2C sensors
 Backlog gpio16 640; gpio17 608
 
-# Both sensor types
-Backlog gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608
+# UART serial
+Backlog gpio43 3200; gpio44 3232
+
+# All peripherals
+Backlog gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608; gpio43 3200; gpio44 3232
 ```
 
 Key GPIO assignments:
@@ -229,7 +232,8 @@ Key GPIO assignments:
 - GPIO 16: I2C SDA (code 640)
 - GPIO 17: I2C SCL (code 608)
 - GPIO 22-27: SPI Display (codes 8896, 8960, 8800, 8832, 8864, 8928)
-- GPIO 43/44: Hardware UART TX/RX (outside template range, use `SerialSend`)
+- GPIO 43: Serial Tx (code 3200)
+- GPIO 44: Serial Rx (code 3232)
 
 ---
 

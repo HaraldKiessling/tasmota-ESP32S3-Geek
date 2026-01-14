@@ -28,12 +28,15 @@ YELLOW='\033[1;33m'
 NC='\033[0m'
 
 # GPIO Template for ESP32S3-Geek hardware
-# Base template with display GPIOs (22-27) - sensors configured via gpio command
+# Base template with display GPIOs (22-27) - peripherals configured via gpio command
 # Display GPIOs require explicit SPI codes (8896,8960,8800,8832,8864,8928) for ST7789
-TEMPLATE='{"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}'
+TEMPLATE='{"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,1,1,0,0,0,0],"FLAG":0,"BASE":1}'
 
-# Sensor GPIO configuration (applied after template)
-SENSOR_GPIO="gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608"
+# Peripheral GPIO configuration (applied after template)
+# DS18x20: gpio6 1312, gpio13 1313, gpio14 1314
+# I2C: gpio16 640, gpio17 608
+# UART: gpio43 3200, gpio44 3232
+PERIPHERAL_GPIO="gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608; gpio43 3200; gpio44 3232"
 
 echo "========================================"
 echo "Tasmota ESP32-S3 Geek Auto-Install"
@@ -178,13 +181,14 @@ echo "  Waiting for restart..."
 sleep 10
 wait_for_device 60
 
-# Configure sensor GPIOs
-# gpio6 1312 = DS18x20-1, gpio13 1313 = DS18x20-2, gpio14 1314 = DS18x20-3
-# gpio16 640 = I2C SDA, gpio17 608 = I2C SCL
+# Configure peripheral GPIOs
+# DS18x20: gpio6 1312, gpio13 1313, gpio14 1314
+# I2C: gpio16 640, gpio17 608
+# UART: gpio43 3200, gpio44 3232
 echo ""
-echo "Step 3b: Configuring sensor GPIOs..."
-tasmota_cmd "Backlog $SENSOR_GPIO" >/dev/null
-echo "  Sensor GPIOs configured"
+echo "Step 3b: Configuring peripheral GPIOs..."
+tasmota_cmd "Backlog $PERIPHERAL_GPIO" >/dev/null
+echo "  Peripheral GPIOs configured"
 
 # Wait for gpio restart
 echo "  Waiting for restart..."

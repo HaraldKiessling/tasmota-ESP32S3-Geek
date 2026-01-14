@@ -52,10 +52,10 @@ esptool.py --chip esp32s3 --port /dev/ttyUSB0 --baud 921600 \
 ### 1. Apply GPIO Template
 
 ```
-Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}
+Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,1,1,0,0,0,0],"FLAG":0,"BASE":1}
 ```
 
-### 2. Configure Sensors (optional)
+### 2. Configure Peripherals (optional)
 
 ```
 # DS18x20 temperature sensors (GPIO 6, 13, 14)
@@ -64,8 +64,11 @@ Backlog gpio6 1312; gpio13 1313; gpio14 1314
 # BME280 I2C sensors (GPIO 16, 17)
 Backlog gpio16 640; gpio17 608
 
-# Both sensor types
-Backlog gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608
+# UART serial (GPIO 43, 44)
+Backlog gpio43 3200; gpio44 3232
+
+# All peripherals
+Backlog gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608; gpio43 3200; gpio44 3232
 ```
 
 ### 3. Upload Configuration Files

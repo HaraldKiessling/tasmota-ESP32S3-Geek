@@ -27,7 +27,7 @@ python -m esptool --chip esp32s3 --port COM7 --baud 921600 write-flash 0x0 tasmo
 2. Upload files: `display.ini`, `autoexec.be`, `pages.jsonl`
 3. Apply template (in console):
    ```
-   Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}
+   Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,1,1,0,0,0,0],"FLAG":0,"BASE":1}
    ```
 4. Configure sensors (optional):
    ```
@@ -37,8 +37,11 @@ python -m esptool --chip esp32s3 --port COM7 --baud 921600 write-flash 0x0 tasmo
    # BME280 I2C sensors
    Backlog gpio16 640; gpio17 608
    
-   # Both sensor types
-   Backlog gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608
+   # UART serial (GPIO 43/44)
+   Backlog gpio43 3200; gpio44 3232
+   
+   # All peripherals
+   Backlog gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608; gpio43 3200; gpio44 3232
    ```
 
 ## Features

@@ -35,14 +35,14 @@ Complete hardware specification and pinout for Waveshare ESP32S3-Geek stick.
 | 16 | I2C SDA | I2C | For BME280, etc. |
 | 17 | I2C SCL | I2C | For BME280, etc. |
 
-### UART Pins (Hardware)
+### UART Pins
 
 | GPIO | Function | Notes |
 |------|----------|-------|
-| 43 | UART TX | Hardware serial transmit (U0TXD) |
-| 44 | UART RX | Hardware serial receive (U0RXD) |
+| 43 | UART TX | Serial transmit (configure via `gpio43 3200`) |
+| 44 | UART RX | Serial receive (configure via `gpio44 3232`) |
 
-**Note**: GPIO 43/44 are outside the Tasmota template range (0-37) and cannot be configured via template or `gpio` command. They are used by the ESP32-S3 hardware UART and accessible via Tasmota's `SerialSend` commands.
+**Configuration**: `Backlog gpio43 3200; gpio44 3232`
 
 ### Display Pins (Internal)
 
@@ -229,7 +229,8 @@ Parameters:
 | 8928 | SPI Backlight | Display Backlight |
 | 8960 | SPI MOSI | Display Data Out |
 
-**UART**: Hardware UART on GPIO 43 (TX) / 44 (RX) - outside template range, use `SerialSend` commands.
+| 3200 | Serial Tx | UART transmit (GPIO 43) |
+| 3232 | Serial Rx | UART receive (GPIO 44) |
 
 ## Wiring Examples
 

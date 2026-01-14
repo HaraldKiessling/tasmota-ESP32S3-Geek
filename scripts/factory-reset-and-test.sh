@@ -171,7 +171,7 @@ echo -e "${BLUE}Step 6: Applying configuration${NC}"
 
 # GPIO Template for ESP32S3-Geek hardware (base template with display)
 # Display GPIOs (22-27) require explicit SPI codes for ST7789
-TEMPLATE='{"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}'
+TEMPLATE='{"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,1,1,0,0,0,0],"FLAG":0,"BASE":1}'
 
 # Template <json> - Set GPIO pin configuration for the device
 curl -s --max-time 15 --get --data-urlencode "cmnd=Template $TEMPLATE" "$TASMOTA_URL/cm" >/dev/null
@@ -191,9 +191,9 @@ while [ $COUNT -lt 60 ]; do
     echo -n "."
 done
 
-# Configure sensor GPIOs
-curl -s --max-time 15 --get --data-urlencode "cmnd=Backlog gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608" "$TASMOTA_URL/cm" >/dev/null
-echo "  Sensor GPIOs configured"
+# Configure peripheral GPIOs (DS18x20, I2C, UART)
+curl -s --max-time 15 --get --data-urlencode "cmnd=Backlog gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608; gpio43 3200; gpio44 3232" "$TASMOTA_URL/cm" >/dev/null
+echo "  Peripheral GPIOs configured"
 
 # Wait for gpio restart
 echo -n "  Waiting for restart..."

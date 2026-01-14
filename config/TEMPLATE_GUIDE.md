@@ -11,7 +11,7 @@
 
 **Step 1: Apply base template** (sets display GPIOs):
 ```
-Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}
+Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,1,1,0,0,0,0],"FLAG":0,"BASE":1}
 ```
 
 **Step 2: Configure sensors** (after restart):
@@ -193,7 +193,8 @@ GPIO 12: Display DC (Data/Command)
 | `8928` | SPI Backlight | Display Backlight |
 | `8960` | SPI MOSI | Display Data Out |
 
-**UART**: GPIO 43 (TX) / 44 (RX) are hardware UART pins outside the template range (0-37). Use `SerialSend` commands for serial communication.
+| `3200` | Serial Tx | UART transmit (GPIO 43) |
+| `3232` | Serial Rx | UART receive (GPIO 44) |
 
 ### Finding Function Codes
 
@@ -326,9 +327,21 @@ Backlog gpio16 640; gpio17 608
 Backlog gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608
 ```
 
-### No Sensors (Display Only)
+### UART Serial (GPIO 43/44)
 
-No additional configuration needed - base template works without sensors.
+```
+Backlog gpio43 3200; gpio44 3232
+```
+
+### All Peripherals
+
+```
+Backlog gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608; gpio43 3200; gpio44 3232
+```
+
+### No Peripherals (Display Only)
+
+No additional configuration needed - base template works without peripherals.
 
 ---
 
@@ -342,7 +355,7 @@ No additional configuration needed - base template works without sensors.
 
 **Solution**:
 ```
-Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}
+Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,1,1,0,0,0,0],"FLAG":0,"BASE":1}
 ```
 
 ### Sensors Not Detected
@@ -398,7 +411,7 @@ Template
 
 **Output**:
 ```json
-{"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}
+{"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,1,1,0,0,0,0],"FLAG":0,"BASE":1}
 ```
 
 **Save this output!**

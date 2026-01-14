@@ -38,11 +38,11 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 # GPIO Template for ESP32S3-Geek (base template with display GPIOs)
-# Sensor GPIOs (6,13,14,16,17) use value 1 (User) - configured via gpio command
-TEMPLATE='{"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}'
+# Peripheral GPIOs use value 1 (User) - configured via gpio command
+TEMPLATE='{"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,1,1,0,0,0,0],"FLAG":0,"BASE":1}'
 
-# Sensor GPIO configuration
-SENSOR_GPIO="gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608"
+# Peripheral GPIO configuration (DS18x20, I2C, UART)
+PERIPHERAL_GPIO="gpio6 1312; gpio13 1313; gpio14 1314; gpio16 640; gpio17 608; gpio43 3200; gpio44 3232"
 
 echo "========================================"
 echo -e "${BLUE}Full Regression Test${NC}"
@@ -154,9 +154,9 @@ echo "  Waiting for restart..."
 sleep 10
 wait_for_device 60
 
-# Configure sensor GPIOs
-tasmota_cmd "Backlog $SENSOR_GPIO" >/dev/null
-echo "  Sensor GPIOs: configured"
+# Configure peripheral GPIOs
+tasmota_cmd "Backlog $PERIPHERAL_GPIO" >/dev/null
+echo "  Peripheral GPIOs: configured"
 
 # Wait for gpio restart
 echo "  Waiting for restart..."
