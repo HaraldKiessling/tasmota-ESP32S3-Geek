@@ -271,7 +271,9 @@ curl -s "http://tasmota-77.local/cm?cmnd=Template" | jq .
 ```
 
 Verify:
-- GPIO 6, 13, 14: 1312 (DS18x20)
+- GPIO 6: 1312 (DS18x20-1)
+- GPIO 13: 1313 (DS18x20-2)
+- GPIO 14: 1314 (DS18x20-3)
 - GPIO 16: 640 (I2C SDA)
 - GPIO 17: 608 (I2C SCL)
 

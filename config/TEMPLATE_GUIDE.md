@@ -33,15 +33,15 @@ Backlog Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,13
     0,     // GPIO 3:  None
     0,     // GPIO 4:  None
     0,     // GPIO 5:  None
-    1312,  // GPIO 6:  DS18x20 ← Temperature Sensor #1
+    1312,  // GPIO 6:  DS18x20-1 ← Temperature Sensor Bus 1
     0,     // GPIO 7:  None (Display RST - auto)
     0,     // GPIO 8:  None (Display SCLK - auto)
     0,     // GPIO 9:  None (Display BL - auto)
     0,     // GPIO 10: None (Display CS - auto)
     0,     // GPIO 11: None (Display MOSI - auto)
     0,     // GPIO 12: None (Display DC - auto)
-    1312,  // GPIO 13: DS18x20 ← Temperature Sensor #2
-    1312,  // GPIO 14: DS18x20 ← Temperature Sensor #3
+    1313,  // GPIO 13: DS18x20-2 ← Temperature Sensor Bus 2
+    1314,  // GPIO 14: DS18x20-3 ← Temperature Sensor Bus 3
     0,     // GPIO 15: None
     640,   // GPIO 16: I2C SDA ← BME280, etc.
     608,   // GPIO 17: I2C SCL ← BME280, etc.
@@ -166,11 +166,12 @@ GPIO 12: Display DC (Data/Command)
 | Code | Function | Description |
 |------|----------|-------------|
 | `0` | None | Pin not used or auto-configured |
-| `1` | DS18x20 | Dallas temperature sensor (generic) |
-| `1312` | DS18x20-1 | Dallas temperature sensor (direct) |
 | `32` | User | User button/input |
 | `608` | I2C SCL | I2C clock line |
 | `640` | I2C SDA | I2C data line |
+| `1312` | DS18x20-1 | Dallas temperature sensor bus 1 |
+| `1313` | DS18x20-2 | Dallas temperature sensor bus 2 |
+| `1314` | DS18x20-3 | Dallas temperature sensor bus 3 |
 | `3200` | Output Hi | Digital output (high) |
 | `3232` | Output Lo | Digital output (low) |
 | `6210` | TuyaSend | Tuya protocol |

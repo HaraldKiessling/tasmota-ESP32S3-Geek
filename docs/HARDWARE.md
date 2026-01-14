@@ -182,10 +182,10 @@ Parameters:
   "GPIO": [
     32,    // GPIO 0: Button
     1,     // GPIO 1-5: User
-    1312,  // GPIO 6: DS18x20
+    1312,  // GPIO 6: DS18x20-1
     1,     // GPIO 7-12: User
-    1312,  // GPIO 13: DS18x20
-    1312,  // GPIO 14: DS18x20
+    1313,  // GPIO 13: DS18x20-2
+    1314,  // GPIO 14: DS18x20-3
     1,     // GPIO 15: User
     640,   // GPIO 16: I2C SDA
     608,   // GPIO 17: I2C SCL
@@ -211,7 +211,9 @@ Parameters:
 | 32 | Button | Physical button |
 | 608 | I2C SCL | I2C clock |
 | 640 | I2C SDA | I2C data |
-| 1312 | DS18x20 | 1-Wire temperature sensor |
+| 1312 | DS18x20-1 | 1-Wire temperature sensor bus 1 |
+| 1313 | DS18x20-2 | 1-Wire temperature sensor bus 2 |
+| 1314 | DS18x20-3 | 1-Wire temperature sensor bus 3 |
 | 3200 | Serial Tx | UART transmit |
 | 3232 | Serial Rx | UART receive |
 | 3840 | Output Hi | Digital output (high) |
@@ -290,7 +292,9 @@ ESP32S3-Geek
    - Required for DS18B20
 
 3. **Check GPIO configuration**:
-   - GPIO 6, 13, or 14 set to DS18x20 (1312)
+   - GPIO 6: DS18x20-1 (1312)
+   - GPIO 13: DS18x20-2 (1313)
+   - GPIO 14: DS18x20-3 (1314)
    - Verify with: `Template` command
 
 4. **Check sensor**:
