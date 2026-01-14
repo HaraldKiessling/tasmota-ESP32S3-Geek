@@ -7,14 +7,12 @@
 
 ## Quick Setup
 
-### Console Commands
+### Console Command
 
-Copy and paste these commands into the Tasmota console:
+Copy and paste this command into the Tasmota console:
 
 ```
-Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}
-Module 0
-Restart 1
+Backlog Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}; Module 0; Restart 1
 ```
 
 **Wait 30 seconds for restart**
@@ -297,7 +295,7 @@ Power1 Toggle  # Toggle
 ### Minimal (Display Only)
 
 ```
-Template {"NAME":"ESP32S3-Geek-Min","GPIO":[32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"FLAG":0,"BASE":1}
+Backlog Template {"NAME":"ESP32S3-Geek-Min","GPIO":[32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"FLAG":0,"BASE":1}; Module 0; Restart 1
 ```
 
 **Features**:
@@ -308,7 +306,7 @@ Template {"NAME":"ESP32S3-Geek-Min","GPIO":[32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 ### With I2C Only
 
 ```
-Template {"NAME":"ESP32S3-Geek-I2C","GPIO":[32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,640,608,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"FLAG":0,"BASE":1}
+Backlog Template {"NAME":"ESP32S3-Geek-I2C","GPIO":[32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,640,608,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"FLAG":0,"BASE":1}; Module 0; Restart 1
 ```
 
 **Features**:
@@ -319,7 +317,7 @@ Template {"NAME":"ESP32S3-Geek-I2C","GPIO":[32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,640
 ### Full Configuration (Current)
 
 ```
-Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}
+Backlog Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}; Module 0; Restart 1
 ```
 
 **Features**:
@@ -340,14 +338,7 @@ Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,
 
 **Solution**:
 ```
-# Reapply template
-Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}
-
-# Set module to Generic
-Module 0
-
-# Restart
-Restart 1
+Backlog Template {"NAME":"ESP32S3-Geek","GPIO":[32,0,0,0,0,0,1312,0,0,0,0,0,0,1313,1314,0,640,608,0,0,0,0,8896,8960,8800,8832,8864,8928,0,6210,0,0,3200,3232,0,0,0,0],"FLAG":0,"BASE":1}; Module 0; Restart 1
 ```
 
 ### Sensors Not Detected
