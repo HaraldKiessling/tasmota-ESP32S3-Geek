@@ -1,6 +1,6 @@
 #!/bin/bash
 # run-all-tests.sh - Run all device tests
-# Version: 15.0.1
+# Version: 15.2.0
 # by Harald Kiessling
 
 set -e

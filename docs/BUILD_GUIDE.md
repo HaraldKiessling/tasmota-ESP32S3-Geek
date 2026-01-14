@@ -44,7 +44,7 @@ Use the provided build script for a fully automated build:
 
 ```bash
 cd /workspaces/tasmota-ESP32S3-Geek
-./scripts/build-lvgl.sh
+./scripts/build-firmware.sh
 ```
 
 The script will:
@@ -62,8 +62,8 @@ The script will:
 After successful build:
 ```
 firmware/
-├── tasmota32s3-lvgl-15.0.1.bin         # OTA firmware
-└── tasmota32s3-lvgl-15.0.1.factory.bin # Factory firmware (includes bootloader)
+├── tasmota32s3-lvgl-full.bin         # OTA firmware
+└── tasmota32s3-lvgl-full.factory.bin # Factory firmware (includes bootloader)
 ```
 
 ## Manual Build Process
@@ -123,10 +123,10 @@ cp ../config/platformio_override.ini .
 
 # Copy to project firmware directory
 cp .pio/build/tasmota32s3-lvgl/firmware.bin \
-   ../firmware/tasmota32s3-lvgl-15.0.1.bin
+   ../firmware/tasmota32s3-lvgl-full.bin
    
 cp .pio/build/tasmota32s3-lvgl/firmware.factory.bin \
-   ../firmware/tasmota32s3-lvgl-15.0.1.factory.bin
+   ../firmware/tasmota32s3-lvgl-full.factory.bin
 ```
 
 ## Build Configurations
@@ -219,7 +219,7 @@ build_flags             = ${env:tasmota32_base.build_flags}
 ### Check Firmware Size
 
 ```bash
-ls -lh firmware/tasmota32s3-lvgl-15.0.1.bin
+ls -lh firmware/tasmota32s3-lvgl-full.bin
 ```
 
 Expected size: ~2.5 MB
@@ -228,13 +228,13 @@ Expected size: ~2.5 MB
 
 ```bash
 # Check for LVGL
-strings firmware/tasmota32s3-lvgl-15.0.1.bin | grep -i lvgl
+strings firmware/tasmota32s3-lvgl-full.bin | grep -i lvgl
 
 # Check for HASPmota
-strings firmware/tasmota32s3-lvgl-15.0.1.bin | grep -i haspmota
+strings firmware/tasmota32s3-lvgl-full.bin | grep -i haspmota
 
 # Check firmware identifier
-strings firmware/tasmota32s3-lvgl-15.0.1.bin | grep tasmota32s3-lvgl
+strings firmware/tasmota32s3-lvgl-full.bin | grep tasmota32s3-lvgl
 ```
 
 Expected output:
@@ -386,8 +386,8 @@ jobs:
     
     - name: Build firmware
       run: |
-        chmod +x scripts/build-lvgl.sh
-        ./scripts/build-lvgl.sh
+        chmod +x scripts/build-firmware.sh
+        ./scripts/build-firmware.sh
     
     - name: Upload firmware
       uses: actions/upload-artifact@v3

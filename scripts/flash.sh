@@ -1,6 +1,6 @@
 #!/bin/bash
 # flash.sh - Flash Tasmota firmware to ESP32S3-Geek
-# Version: 15.0.1
+# Version: 15.2.0
 # by Harald Kiessling
 
 set -e
@@ -15,7 +15,7 @@ NC='\033[0m' # No Color
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 FIRMWARE_DIR="$PROJECT_ROOT/firmware/release"
-BUILD_VERSION="15.0.1"
+BUILD_VERSION="15.2.0"
 
 echo -e "${GREEN}========================================${NC}"
 echo -e "${GREEN}Tasmota ESP32S3-Geek Flash Tool${NC}"

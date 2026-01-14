@@ -1,6 +1,6 @@
 #!/bin/bash
 # test-device-url.sh - Test Tasmota ESP32S3-Geek device via URL
-# Version: 15.0.1
+# Version: 15.2.0
 # by Harald Kiessling
 
 # Colors for output
@@ -94,7 +94,7 @@ log_test "Tasmota Version"
 STATUS=$(tasmota_cmd "Status%202")
 VERSION=$(echo "$STATUS" | grep -o '"Version":"[^"]*"' | cut -d'"' -f4)
 BUILD_DATE=$(echo "$STATUS" | grep -o '"BuildDateTime":"[^"]*"' | cut -d'"' -f4)
-if [[ "$VERSION" == *"15.0.1"* ]]; then
+if [[ "$VERSION" == *"15.2.0"* ]]; then
     log_pass "Tasmota version: $VERSION"
     if [[ "$VERSION" == *"esp32s3geek"* ]]; then
         log_pass "Custom firmware detected: esp32s3geek"

@@ -1,6 +1,6 @@
 #!/bin/bash
 # test-device.sh - Test Tasmota ESP32S3-Geek device
-# Version: 15.0.1
+# Version: 15.2.0
 # by Harald Kiessling
 
 set -e
@@ -102,7 +102,7 @@ log_test "Tasmota Version"
 ((TESTS_TOTAL++))
 STATUS=$(tasmota_cmd "Status%200")
 VERSION=$(echo "$STATUS" | grep -o '"Version":"[^"]*"' | cut -d'"' -f4)
-if [[ "$VERSION" == *"15.0.1"* ]]; then
+if [[ "$VERSION" == *"15.2.0"* ]]; then
     log_pass "Tasmota version: $VERSION"
 else
     log_fail "Unexpected Tasmota version: $VERSION"
